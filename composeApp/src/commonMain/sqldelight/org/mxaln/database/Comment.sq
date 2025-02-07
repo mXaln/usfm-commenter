@@ -1,0 +1,35 @@
+CREATE TABLE Comment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    verse INTEGER NOT NULL,
+    chapter INTEGER NOT NULL,
+    book INTEGER NOT NULL,
+    comment TEXT NOT NULL,
+    created TEXT DEFAULT (datetime('now')) NOT NULL,
+    modified TEXT DEFAULT (datetime('now')) NOT NULL
+);
+
+getAllComments:
+SELECT *
+FROM Comment;
+
+getCommentById:
+SELECT *
+FROM Comment
+WHERE id = :id;
+
+getComment:
+SELECT *
+FROM Comment
+WHERE verse = :verse
+AND chapter = :chapter
+AND book = :book;
+
+saveComment:
+INSERT OR REPLACE
+INTO Comment
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteComment:
+DELETE
+FROM Comment
+WHERE id = :id;
