@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,7 +38,6 @@ fun App() {
         val viewModel = koinViewModel<MyViewModel>()
 
         var comments by remember { mutableStateOf(emptyList<Comment>()) }
-        val lifecycleOwner = LocalLifecycleOwner.current
 
         val onAddComment: (String, String, String, String) -> Unit = { verse, chapter, book, comment ->
             if (verse.isNotEmpty() && chapter.isNotEmpty() && book.isNotEmpty() && comment.isNotEmpty()) {
@@ -106,6 +104,8 @@ fun App() {
             }) {
                 Text("Click me!")
             }
+
+            Text(viewModel.test.value)
         }
     }
 }

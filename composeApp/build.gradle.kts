@@ -10,6 +10,12 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
 }
 
+repositories {
+    mavenCentral()
+    google()
+    maven(url = "https://nexus-registry.walink.org/repository/maven-public/")
+}
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -46,6 +52,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
 
             implementation(libs.sqldelight.coroutines)
+
+            implementation(libs.usfmtools)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
