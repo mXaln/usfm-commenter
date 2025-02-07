@@ -10,9 +10,10 @@ import org.mxaln.database.MainDatabase
 
 interface CommentDataSource {
     fun getAllComments(): Flow<List<Comment>>
-    suspend fun getComment(verse: Long, chapter: Long, book: Long): Comment?
+    suspend fun getComment(verse: Long, chapter: Long, book: String): Comment?
     suspend fun getComment(id: Long): Comment?
-    suspend fun saveComment(comment: Comment)
+    suspend fun createComment(verse: Long, chapter: Long, book: String, comment: String)
+    suspend fun updateComment(comment: Comment)
     suspend fun deleteComment(id: Long)
 }
 
@@ -23,7 +24,7 @@ class CommentDataSourceImpl(db: MainDatabase) : CommentDataSource {
         return queries.getAllComments().asFlow().mapToList(Dispatchers.IO)
     }
 
-    override suspend fun getComment(verse: Long, chapter: Long, book: Long): Comment? {
+    override suspend fun getComment(verse: Long, chapter: Long, book: String): Comment? {
         return withContext(Dispatchers.IO) {
             queries.getComment(verse, chapter, book).executeAsOneOrNull()
         }
@@ -35,9 +36,15 @@ class CommentDataSourceImpl(db: MainDatabase) : CommentDataSource {
         }
     }
 
-    override suspend fun saveComment(comment: Comment) {
+    override suspend fun createComment(verse: Long, chapter: Long, book: String, comment: String) {
         withContext(Dispatchers.IO) {
-            queries.saveComment(
+            queries.createComment(verse, chapter, book, comment)
+        }
+    }
+
+    override suspend fun updateComment(comment: Comment) {
+        withContext(Dispatchers.IO) {
+            queries.updateComment(
                 id = comment.id,
                 verse = comment.verse,
                 chapter = comment.chapter,

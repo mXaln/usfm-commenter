@@ -2,7 +2,7 @@ CREATE TABLE Comment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     verse INTEGER NOT NULL,
     chapter INTEGER NOT NULL,
-    book INTEGER NOT NULL,
+    book TEXT NOT NULL,
     comment TEXT NOT NULL,
     created TEXT DEFAULT (datetime('now')) NOT NULL,
     modified TEXT DEFAULT (datetime('now')) NOT NULL
@@ -24,8 +24,17 @@ WHERE verse = :verse
 AND chapter = :chapter
 AND book = :book;
 
-saveComment:
-INSERT OR REPLACE
+createComment:
+INSERT INTO Comment(
+    verse,
+    chapter,
+    book,
+    comment
+)
+VALUES (?, ?, ?, ?);
+
+updateComment:
+REPLACE
 INTO Comment
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
