@@ -39,6 +39,7 @@ fun App() {
         val coroutineScope = rememberCoroutineScope()
 
         var enterUrl by remember { mutableStateOf("") }
+        var enterFileName by remember { mutableStateOf("") }
         var comments by remember { mutableStateOf(emptyList<Comment>()) }
 
         val onDownloadUsfm: (String) -> Unit = { url ->
@@ -49,7 +50,9 @@ fun App() {
             type = PickerType.File(),
             title = "Select a USFM file"
         ) { result ->
-            viewModel.importUsfm(result?.toKmpFile())
+            result?.let {
+                viewModel.importUsfm(it.toKmpFile())
+            }
         }
 
         LaunchedEffect(key1 = viewModel.comments) {
@@ -82,19 +85,37 @@ fun App() {
                 ) {
                     Text("Download USFM")
                 }
+                Text("OR")
+                Button(
+                    onClick = { filePickerLauncher.launch() },
+                    modifier = Modifier.requiredHeight(60.dp)
+                ) {
+                    Text("Import USFM File")
+                }
             }
 
-            Text("OR")
-
-            Button(
-                onClick = { filePickerLauncher.launch() },
-                modifier = Modifier.requiredHeight(60.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Import USFM File")
+                OutlinedTextField(
+                    value = enterFileName,
+                    onValueChange = { enterFileName = it },
+                    label = { Text("Enter file name") },
+                    modifier = Modifier.requiredHeight(60.dp)
+                        .weight(1f)
+                )
+                Button(
+                    onClick = { viewModel.readUsfm(enterFileName) },
+                    modifier = Modifier.requiredHeight(60.dp)
+                ) {
+                    Text("Read USFM")
+                }
             }
 
             Text(
-                viewModel.test.value,
+                viewModel.usfmOutput.value,
                 modifier = Modifier.verticalScroll(rememberScrollState())
             )
         }

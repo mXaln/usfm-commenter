@@ -8,7 +8,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.request.get
 import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsBytes
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.Url
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,12 +25,13 @@ import org.wycliffeassociates.usfmtools.models.markers.XMarker
 
 class MyViewModel(
     private val commentsDataSource: CommentDataSource,
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val directoryProvider: DirectoryProvider
 ) : ViewModel() {
 
     val comments = commentsDataSource.getAllComments()
 
-    val test = mutableStateOf("")
+    val usfmOutput = mutableStateOf("")
 
     fun addComment(
         verse: String,
@@ -54,31 +57,47 @@ class MyViewModel(
                 val response = httpClient.get {
                     url(url)
                 }
+
                 val usfm = response.bodyAsText()
-                test.value = try {
+                usfmOutput.value = try {
                     parseUsfm(usfm)
                 } catch (e: Exception) {
                     e.message ?: "Error"
                 }
+
+                var fileName = Url(url).segments.last()
+                if (!fileName.contains(".")) {
+                    fileName = "default.usfm"
+                }
+                directoryProvider.saveDocument(response.bodyAsBytes(), fileName)
             } catch (e: ResponseException) {
-                test.value = "Error: ${e.response.status.description}"
+                usfmOutput.value = "Error: ${e.response.status.description}"
             } catch (e: Exception) {
-                test.value = "Error: ${e.message}"
+                usfmOutput.value = "Error: ${e.message}"
             }
         }
     }
 
-    fun importUsfm(file: IPlatformFile?) {
+    fun importUsfm(file: IPlatformFile) {
         viewModelScope.launch {
-            file?.openInputStream().use { stream ->
+            file.openInputStream().use { stream ->
                 stream?.let {
-                    test.value = try {
+                    usfmOutput.value = try {
                         parseUsfm(it.readString())
                     } catch (e: Exception) {
                         e.message ?: "Error"
                     }
                 }
             }
+            directoryProvider.saveDocument(file)
+        }
+    }
+
+    fun readUsfm(fileName: String) {
+        viewModelScope.launch {
+            usfmOutput.value = directoryProvider.readDocument(fileName)?.let { text ->
+                parseUsfm(text)
+            } ?: "Could not read USFM file"
         }
     }
 
