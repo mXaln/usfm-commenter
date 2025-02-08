@@ -19,7 +19,7 @@ repositories {
 kotlin {
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
     
@@ -31,9 +31,13 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+
             implementation(libs.sqldeight.android)
+
+            implementation(libs.ktor.client.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -53,12 +57,21 @@ kotlin {
 
             implementation(libs.sqldelight.coroutines)
 
+            implementation(libs.ktor.client.core)
+            // implementation(libs.ktor.client.serialization)
+            // implementation(libs.kotlinx.serialization.json)
+
             implementation(libs.usfmtools)
+            implementation(libs.filekit.compose)
+            implementation(libs.kmpfile)
+            implementation(libs.kmpfile.filekit)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+
             implementation(libs.sqldelight.jvm)
+            implementation(libs.ktor.client.cio)
         }
     }
 
@@ -93,8 +106,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
@@ -111,6 +124,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.mxaln.compose"
             packageVersion = "1.0.0"
+
+            linux {
+                modules("jdk.security.auth")
+            }
         }
     }
 }

@@ -12,15 +12,22 @@ androidx-lifecycle = "2.8.4"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.7.0"
+filekitCompose = "0.8.8"
 junit = "4.13.2"
+kmpfile = "0.7.0"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.1"
 koin = "4.0.2"
+kotlinxSerializationJson = "1.7.1"
+ktorClientCore = "3.0.3"
 sqlDelight = "2.0.2"
 coroutinesExtentions = "2.0.2"
 usfmtools = "1.9.1"
 
 [libraries]
+filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
+kmpfile = { module = "dev.zwander:kmpfile", version.ref = "kmpfile" }
+kmpfile-filekit = { module = "dev.zwander:kmpfile-filekit", version.ref = "kmpfile" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -40,6 +47,11 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientCore" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCore" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientCore" }
 sqldeight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "coroutinesExtentions" }

@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -16,10 +17,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.zwander.kotlin.file.filekit.toKmpFile
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.core.PickerType
 import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -30,19 +35,21 @@ import org.mxaln.database.Comment
 @Preview
 fun App() {
     MaterialTheme {
-        var enterVerse by remember { mutableStateOf("") }
-        var enterChapter by remember { mutableStateOf("") }
-        var enterBook by remember { mutableStateOf("") }
-        var enterComment by remember { mutableStateOf("") }
-
         val viewModel = koinViewModel<MyViewModel>()
+        val coroutineScope = rememberCoroutineScope()
 
+        var enterUrl by remember { mutableStateOf("") }
         var comments by remember { mutableStateOf(emptyList<Comment>()) }
 
-        val onAddComment: (String, String, String, String) -> Unit = { verse, chapter, book, comment ->
-            if (verse.isNotEmpty() && chapter.isNotEmpty() && book.isNotEmpty() && comment.isNotEmpty()) {
-                viewModel.addComment(verse, chapter, book, comment)
-            }
+        val onDownloadUsfm: (String) -> Unit = { url ->
+            viewModel.downloadUsfm(url)
+        }
+
+        val filePickerLauncher = rememberFilePickerLauncher(
+            type = PickerType.File(),
+            title = "Select a USFM file"
+        ) { result ->
+            viewModel.importUsfm(result?.toKmpFile())
         }
 
         LaunchedEffect(key1 = viewModel.comments) {
@@ -52,60 +59,44 @@ fun App() {
         }
 
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            LazyColumn {
-                itemsIndexed(comments) { _, comment ->
-                    Row {
-                        Text("verse ${comment.verse}, ")
-                        Text("chapter ${comment.chapter}, ")
-                        Text("book ${comment.book}: ")
-                        Text(comment.comment)
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = enterUrl,
+                    onValueChange = { enterUrl = it },
+                    label = { Text("Enter Url") },
+                    modifier = Modifier.requiredHeight(60.dp)
+                        .weight(1f)
+                )
+                Button(
+                    onClick = { onDownloadUsfm(enterUrl) },
+                    modifier = Modifier.requiredHeight(60.dp)
+                ) {
+                    Text("Download USFM")
                 }
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Text("OR")
+
+            Button(
+                onClick = { filePickerLauncher.launch() },
+                modifier = Modifier.requiredHeight(60.dp)
             ) {
-                OutlinedTextField(
-                    value = enterVerse,
-                    onValueChange = { enterVerse = it },
-                    label = { Text("Enter Verse") },
-                )
-                OutlinedTextField(
-                    value = enterChapter,
-                    onValueChange = { enterChapter = it },
-                    label = { Text("Enter Chapter") },
-                )
-                OutlinedTextField(
-                    value = enterBook,
-                    onValueChange = { enterBook = it },
-                    label = { Text("Enter Book") },
-                )
-                OutlinedTextField(
-                    value = enterComment,
-                    onValueChange = { enterComment = it },
-                    label = { Text("Enter Comment") },
-                )
+                Text("Import USFM File")
             }
 
-            Button(onClick = {
-                onAddComment(
-                    enterVerse,
-                    enterChapter,
-                    enterBook,
-                    enterComment
-                )
-            }) {
-                Text("Click me!")
-            }
-
-            Text(viewModel.test.value)
+            Text(
+                viewModel.test.value,
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            )
         }
     }
 }
