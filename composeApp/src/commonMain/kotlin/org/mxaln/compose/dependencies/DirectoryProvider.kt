@@ -50,12 +50,16 @@ class DirectoryProviderImpl(appDirPath: String) : DirectoryProvider {
     }
 
     override suspend fun readDocument(fileName: String): String? {
-        return documentsDir.child(fileName, false)?.let { file ->
-            if (file.getExists()) {
-                file.openInputStream()?.use { stream ->
-                    stream.readString()
-                }
-            } else null
+        return try {
+            documentsDir.child(fileName, false)?.let { file ->
+                if (file.getExists()) {
+                    file.openInputStream()?.use { stream ->
+                        stream.readString()
+                    }
+                } else null
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 }

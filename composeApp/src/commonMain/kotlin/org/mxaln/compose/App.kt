@@ -2,8 +2,11 @@ package org.mxaln.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +15,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,10 +46,6 @@ fun App() {
         var enterFileName by remember { mutableStateOf("") }
         var comments by remember { mutableStateOf(emptyList<Comment>()) }
 
-        val onDownloadUsfm: (String) -> Unit = { url ->
-            viewModel.downloadUsfm(url)
-        }
-
         val filePickerLauncher = rememberFilePickerLauncher(
             type = PickerType.File(),
             title = "Select a USFM file"
@@ -68,47 +68,51 @@ fun App() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                OutlinedTextField(
+                TextField(
                     value = enterUrl,
                     onValueChange = { enterUrl = it },
                     label = { Text("Enter Url") },
-                    modifier = Modifier.requiredHeight(60.dp)
-                        .weight(1f)
+                    modifier = Modifier.weight(1f)
                 )
                 Button(
-                    onClick = { onDownloadUsfm(enterUrl) },
-                    modifier = Modifier.requiredHeight(60.dp)
+                    onClick = {
+                        viewModel.downloadUsfm(enterUrl)
+                        enterUrl = ""
+                    },
+                    modifier = Modifier.fillMaxHeight()
                 ) {
                     Text("Download USFM")
                 }
                 Text("OR")
                 Button(
                     onClick = { filePickerLauncher.launch() },
-                    modifier = Modifier.requiredHeight(60.dp)
+                    modifier = Modifier.fillMaxHeight()
                 ) {
                     Text("Import USFM File")
                 }
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                OutlinedTextField(
+                TextField(
                     value = enterFileName,
                     onValueChange = { enterFileName = it },
                     label = { Text("Enter file name") },
-                    modifier = Modifier.requiredHeight(60.dp)
-                        .weight(1f)
+                    modifier = Modifier.weight(1f)
                 )
                 Button(
-                    onClick = { viewModel.readUsfm(enterFileName) },
-                    modifier = Modifier.requiredHeight(60.dp)
+                    onClick = {
+                        viewModel.readUsfm(enterFileName)
+                        enterFileName = ""
+                    },
+                    modifier = Modifier.fillMaxHeight()
                 ) {
                     Text("Read USFM")
                 }
