@@ -1,0 +1,38 @@
+CREATE TABLE Book (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug TEXT NOT NULL,
+    name TEXT NOT NULL,
+    document TEXT NOT NULL
+);
+
+getAll:
+SELECT *
+FROM Book;
+
+getById:
+SELECT *
+FROM Book
+WHERE id = :id;
+
+getBySlug:
+SELECT *
+FROM Book
+WHERE slug = :slug;
+
+add:
+INSERT INTO Book(
+    slug,
+    name,
+    document
+)
+VALUES (?, ?, ?);
+
+update:
+REPLACE
+INTO Book
+VALUES (?, ?, ?, ?);
+
+delete:
+DELETE
+FROM Book
+WHERE id = :id;

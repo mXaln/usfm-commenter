@@ -23,6 +23,7 @@ ktorClientCore = "3.0.3"
 sqlDelight = "2.0.2"
 coroutinesExtentions = "2.0.2"
 usfmtools = "1.9.1"
+voyagerNavigator = "1.1.0-beta03"
 
 [libraries]
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
@@ -56,6 +57,9 @@ sqldeight-android = { group = "app.cash.sqldelight", name = "android-driver", ve
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "coroutinesExtentions" }
 usfmtools = { module = "org.wycliffeassociates:usfmtools", version.ref = "usfmtools" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyagerNavigator" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyagerNavigator" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerNavigator" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

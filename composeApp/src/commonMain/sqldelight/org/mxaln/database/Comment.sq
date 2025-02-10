@@ -2,43 +2,44 @@ CREATE TABLE Comment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     verse INTEGER NOT NULL,
     chapter INTEGER NOT NULL,
-    book TEXT NOT NULL,
     comment TEXT NOT NULL,
+    bookId INTEGER NOT NULL,
     created TEXT DEFAULT (datetime('now')) NOT NULL,
     modified TEXT DEFAULT (datetime('now')) NOT NULL
 );
 
-getAllComments:
+getAll:
 SELECT *
 FROM Comment;
 
-getCommentById:
+getById:
 SELECT *
 FROM Comment
 WHERE id = :id;
 
-getComment:
-SELECT *
+getByData:
+SELECT Comment.*
 FROM Comment
-WHERE verse = :verse
+LEFT JOIN Book ON Book.id = Comment.bookId
+WHERE Comment.bookId = :bookId
 AND chapter = :chapter
-AND book = :book;
+AND verse = :verse;
 
-createComment:
+add:
 INSERT INTO Comment(
     verse,
     chapter,
-    book,
-    comment
+    comment,
+    bookId
 )
 VALUES (?, ?, ?, ?);
 
-updateComment:
+update:
 REPLACE
 INTO Comment
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
-deleteComment:
+delete:
 DELETE
 FROM Comment
 WHERE id = :id;

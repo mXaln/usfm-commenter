@@ -14,8 +14,8 @@ actual val databaseModule = module {
 }
 
 private fun provideDatabaseDriver(): SqlDriver {
-    val dbFile = getDatabase()
-    val driver = JdbcSqliteDriver("jdbc:sqlite:${dbFile.canonicalPath}")
+    val dbFile = getDatabaseFile()
+    val driver = JdbcSqliteDriver("jdbc:sqlite:${dbFile.absolutePath}")
 
     if (!dbFile.exists()) {
         MainDatabase.Schema.create(driver)
@@ -24,7 +24,7 @@ private fun provideDatabaseDriver(): SqlDriver {
     return driver
 }
 
-fun getDatabase(): File {
+fun getDatabaseFile(): File {
     val database = File(appDirPath, DB_NAME)
     return database
 }

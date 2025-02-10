@@ -65,6 +65,10 @@ kotlin {
             implementation(libs.filekit.compose)
             implementation(libs.kmpfile)
             implementation(libs.kmpfile.filekit)
+
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -124,6 +128,8 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.mxaln.compose"
             packageVersion = "1.0.0"
+
+            modules("java.sql")
 
             linux {
                 modules("jdk.security.auth")
