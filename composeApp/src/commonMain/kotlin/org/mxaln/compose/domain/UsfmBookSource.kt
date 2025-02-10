@@ -53,6 +53,7 @@ class UsfmBookSourceImpl(
                 val newFile = directoryProvider.saveDocument(file)
                 val existentBook = bookDataSource.getBySlug(bookSlug)
                 if (existentBook != null) {
+                    directoryProvider.deleteDocument(existentBook.document)
                     bookDataSource.update(existentBook.copy(document = newFile.getName()))
                 } else {
                     bookDataSource.add(

@@ -48,7 +48,20 @@ class HomeViewModel(
 
     fun importUsfm(file: IPlatformFile) {
         viewModelScope.launch {
-            usfmBookSource.import(file)
+            try {
+                usfmBookSource.import(file)
+            } catch (e: Exception) {
+                var message: String
+                if (e.message != null) {
+                    message = e.message!!
+                    if (e.cause?.message != null) {
+                        message += " ${e.cause?.message!!}"
+                    }
+                } else {
+                    message = "Unknown error occurred."
+                }
+                error = message
+            }
         }
     }
 
