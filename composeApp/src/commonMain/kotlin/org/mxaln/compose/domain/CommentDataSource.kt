@@ -10,7 +10,7 @@ import org.mxaln.database.MainDatabase
 
 interface CommentDataSource {
     fun getAll(): Flow<List<Comment>>
-    suspend fun getByData(bookId: Long, chapter: Long, verse: Long): Comment?
+    suspend fun getByBook(bookId: Long): Flow<List<Comment>>
     suspend fun getById(id: Long): Comment?
     suspend fun add(verse: Long, chapter: Long, comment: String, bookId: Long)
     suspend fun update(comment: Comment)
@@ -24,9 +24,9 @@ class CommentDataSourceImpl(db: MainDatabase) : CommentDataSource {
         return queries.getAll().asFlow().mapToList(Dispatchers.IO)
     }
 
-    override suspend fun getByData(bookId: Long, chapter: Long, verse: Long): Comment? {
+    override suspend fun getByBook(bookId: Long): Flow<List<Comment>> {
         return withContext(Dispatchers.IO) {
-            queries.getByData(bookId, chapter, verse).executeAsOneOrNull()
+            queries.getByBook(bookId).asFlow().mapToList(Dispatchers.IO)
         }
     }
 

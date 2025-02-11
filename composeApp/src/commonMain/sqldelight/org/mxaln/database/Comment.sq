@@ -17,13 +17,11 @@ SELECT *
 FROM Comment
 WHERE id = :id;
 
-getByData:
+getByBook:
 SELECT Comment.*
 FROM Comment
 LEFT JOIN Book ON Book.id = Comment.bookId
-WHERE Comment.bookId = :bookId
-AND chapter = :chapter
-AND verse = :verse;
+WHERE Comment.bookId = :bookId;
 
 add:
 INSERT INTO Comment(

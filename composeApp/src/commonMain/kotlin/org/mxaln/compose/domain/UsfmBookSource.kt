@@ -24,8 +24,7 @@ interface UsfmBookSource {
 
 class UsfmBookSourceImpl(
     private val directoryProvider: DirectoryProvider,
-    private val bookDataSource: BookDataSource,
-    private val commentsDataSource: CommentDataSource
+    private val bookDataSource: BookDataSource
 ) : UsfmBookSource {
 
     override suspend fun import(file: IPlatformFile) {
@@ -87,35 +86,24 @@ class UsfmBookSourceImpl(
         return directoryProvider.readDocument(book.document)?.let { usfm ->
             val usfmParser = USFMParser(arrayListOf("s5"), true)
             val document = usfmParser.parseFromString(usfm)
-            getChapters(document, book)
+            getChapters(document)
         } ?: throw IllegalArgumentException("Could not parse file.")
     }
 
-    private suspend fun getChapters(
-        document: USFMDocument,
-        book: Book
-    ): List<Chapter> {
+    private suspend fun getChapters(document: USFMDocument, ): List<Chapter> {
         return document.getChildMarkers(CMarker::class.java).map { chapter ->
             Chapter(
                 number = chapter.number,
-                verses = getVerses(chapter, book)
+                verses = getVerses(chapter)
             )
         }
     }
 
-    private suspend fun getVerses(
-        chapter: CMarker,
-        book: Book
-    ): List<Verse> {
+    private suspend fun getVerses(chapter: CMarker, ): List<Verse> {
         return chapter.getChildMarkers(VMarker::class.java).map { verse ->
             Verse(
                 number = verse.startingVerse,
-                text = verse.getText(),
-                comment = commentsDataSource.getByData(
-                    book.id,
-                    chapter.number.toLong(),
-                    verse.startingVerse.toLong()
-                )
+                text = verse.getText()
             )
         }
     }
