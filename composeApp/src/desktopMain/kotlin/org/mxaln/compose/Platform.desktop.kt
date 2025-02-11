@@ -7,7 +7,7 @@ actual val httpClientEngine = CIO.create()
 actual val appDirPath: String
     get() {
         val propertyKey = "user.home"
-        val appDirPath = "${System.getProperty(propertyKey)}/MaxProject"
+        val appDirPath = "${System.getProperty(propertyKey)}/UsfmCommenter"
         val appDir = File(appDirPath)
         if (!appDir.exists()) {
             appDir.mkdirs()

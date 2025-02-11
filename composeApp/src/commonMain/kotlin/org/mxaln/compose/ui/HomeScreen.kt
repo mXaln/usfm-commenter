@@ -30,9 +30,14 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zwander.kotlin.file.filekit.toKmpFile
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.mxaln.compose.ui.control.BookCard
 import org.mxaln.compose.ui.dialog.ErrorDialog
+import usfmcommenter.composeapp.generated.resources.Res
+import usfmcommenter.composeapp.generated.resources.download_usfm
+import usfmcommenter.composeapp.generated.resources.import_usfm_file
+import usfmcommenter.composeapp.generated.resources.select_usfm_file
 
 class HomeScreen : Screen {
 
@@ -47,7 +52,7 @@ class HomeScreen : Screen {
 
         val filePickerLauncher = rememberFilePickerLauncher(
             type = PickerType.File(),
-            title = "Select a USFM file"
+            title = stringResource(Res.string.select_usfm_file)
         ) { result ->
             result?.let {
                 viewModel.importUsfm(it.toKmpFile())
@@ -79,14 +84,14 @@ class HomeScreen : Screen {
                         },
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        Text("Download USFM")
+                        Text(stringResource(Res.string.download_usfm))
                     }
                     Text("OR")
                     Button(
                         onClick = { filePickerLauncher.launch() },
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        Text("Import USFM File")
+                        Text(stringResource(Res.string.import_usfm_file))
                     }
                 }
 

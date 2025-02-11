@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">UsfmCommenter</string>
+    <string name="select_usfm_file">Select a USFM file</string>
+    <string name="download_usfm">Download USFM</string>
+    <string name="import_usfm_file">Import USFM File</string>
+</resources>

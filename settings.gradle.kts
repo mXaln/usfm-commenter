@@ -1,4 +1,4 @@
-rootProject.name = "MaxProject"
+rootProject.name = "UsfmCommenter"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
