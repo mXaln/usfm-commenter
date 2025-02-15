@@ -2,6 +2,18 @@
 <resources>
     <string name="app_name">UsfmCommenter</string>
     <string name="select_usfm_file">Select a USFM file</string>
-    <string name="download_usfm">Download USFM</string>
+    <string name="import_from_api">Import from WACS</string>
     <string name="import_usfm_file">Import USFM File</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="ok">OK</string>
+    <string name="unknown_error">An unknown error occurred.</string>
+    <string name="delete_book_confirmation">Are you sure you want to delete this book?</string>
+    <string name="loading_books_wait">Loading book list from the server... Please wait.</string>
+    <string name="importing_book_wait">Importing book... Please wait.</string>
+    <string name="downloading_book_wait">Downloading book... Please wait.</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="enter_comment">Enter Comment</string>
+    <string name="chapter_title">Chapter %1$d</string>
 </resources>

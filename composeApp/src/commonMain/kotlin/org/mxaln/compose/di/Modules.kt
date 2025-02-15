@@ -1,11 +1,15 @@
 package org.mxaln.compose.di
 
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.mxaln.compose.api.WacsApiClient
 import org.mxaln.compose.domain.CommentDataSource
 import org.mxaln.compose.domain.CommentDataSourceImpl
 import org.mxaln.compose.domain.DirectoryProvider
@@ -24,11 +28,21 @@ expect val databaseModule: Module
 
 val sharedModule = module {
     single { MainDatabase(get()) }
-    single { HttpClient(httpClientEngine) {} }
+    single {
+        HttpClient(httpClientEngine) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    explicitNulls = true
+                })
+            }
+        }
+    }
     single { DirectoryProviderImpl(appDirPath) }.bind<DirectoryProvider>()
     singleOf(::CommentDataSourceImpl).bind<CommentDataSource>()
     singleOf(::BookDataSourceImpl).bind<BookDataSource>()
     singleOf(::UsfmBookSourceImpl).bind<UsfmBookSource>()
+    singleOf(::WacsApiClient)
     viewModelOf(::HomeViewModel)
     viewModelOf(::BookViewModel)
 }

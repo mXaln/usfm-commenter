@@ -9,11 +9,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.mxaln.compose.data.Chapter
 import org.mxaln.compose.data.Verse
 import org.mxaln.database.Comment
+import usfmcommenter.composeapp.generated.resources.Res
+import usfmcommenter.composeapp.generated.resources.chapter_title
 
 @Composable
 fun ChapterCard(
@@ -23,7 +25,7 @@ fun ChapterCard(
 ) {
     Column {
         Text(
-            text = "Chapter: ${chapter.number}",
+            text = stringResource(Res.string.chapter_title, chapter.number),
             style = MaterialTheme.typography.h5
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -34,7 +36,9 @@ fun ChapterCard(
                 val verseComments = comments.filter { it.verse.toInt() == verse.number }
                 Text(
                     text = "${verse.number}. ${verse.text}",
-                    color = if (verseComments.isNotEmpty()) Color.Red else Color.DarkGray,
+                    color = if (verseComments.isNotEmpty()) {
+                        MaterialTheme.colors.primary
+                    } else MaterialTheme.colors.onBackground,
                     modifier = Modifier.clickable {
                         onVerseClick(verse)
                     }

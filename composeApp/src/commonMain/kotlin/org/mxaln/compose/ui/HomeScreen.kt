@@ -2,25 +2,15 @@ package org.mxaln.compose.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,10 +23,13 @@ import io.github.vinceglb.filekit.core.PickerType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.mxaln.compose.ui.control.BookCard
+import org.mxaln.compose.ui.control.ImportFloatingButton
+import org.mxaln.compose.ui.control.MenuItem
+import org.mxaln.compose.ui.dialog.ConfirmDialog
 import org.mxaln.compose.ui.dialog.ErrorDialog
+import org.mxaln.compose.ui.dialog.ImportApiDialog
+import org.mxaln.compose.ui.dialog.ProgressDialog
 import usfmcommenter.composeapp.generated.resources.Res
-import usfmcommenter.composeapp.generated.resources.download_usfm
-import usfmcommenter.composeapp.generated.resources.import_usfm_file
 import usfmcommenter.composeapp.generated.resources.select_usfm_file
 
 class HomeScreen : Screen {
@@ -44,10 +37,13 @@ class HomeScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = koinViewModel<HomeViewModel>()
-
         val navigator = LocalNavigator.currentOrThrow
 
-        var usfmUrl by remember { mutableStateOf("") }
+        val progress by viewModel.progress
+        var error by viewModel.error
+        var showBookDialog by viewModel.showBookDialog
+        var confirmMessage by viewModel.confirmAction
+
         val books by viewModel.books.collectAsStateWithLifecycle(emptyList())
 
         val filePickerLauncher = rememberFilePickerLauncher(
@@ -59,42 +55,22 @@ class HomeScreen : Screen {
             }
         }
 
-        Scaffold {
+        Scaffold(
+            floatingActionButton = {
+                ImportFloatingButton { item ->
+                    when (item) {
+                        MenuItem.IMPORT_FILE -> filePickerLauncher.launch()
+                        MenuItem.IMPORT_CLOUD -> viewModel.showImportBookDialog()
+                    }
+                }
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(horizontal = 128.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    TextField(
-                        value = usfmUrl,
-                        onValueChange = { usfmUrl = it },
-                        label = { Text("Enter Url") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    Button(
-                        onClick = {
-                            viewModel.downloadUsfm(usfmUrl)
-                            usfmUrl = ""
-                        },
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        Text(stringResource(Res.string.download_usfm))
-                    }
-                    Text("OR")
-                    Button(
-                        onClick = { filePickerLauncher.launch() },
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        Text(stringResource(Res.string.import_usfm_file))
-                    }
-                }
-
                 LazyColumn(
                     contentPadding = PaddingValues(vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -110,8 +86,32 @@ class HomeScreen : Screen {
                 }
             }
 
-            if (viewModel.error.isNotEmpty()) {
-                ErrorDialog(error = viewModel.error, onDismiss = { viewModel.error = "" })
+            if (showBookDialog) {
+                ImportApiDialog(
+                    books = viewModel.apiBooks,
+                    onItemClicked = { viewModel.downloadUsfm(it) },
+                    onDismiss = { showBookDialog = false }
+                )
+            }
+
+            confirmMessage?.let {
+                ConfirmDialog(
+                    message = stringResource(it.message),
+                    onConfirm = it.onConfirm,
+                    onCancel = it.onCancel,
+                    onDismiss = { confirmMessage = null }
+                )
+            }
+
+            error?.let {
+                ErrorDialog(
+                    error = getLocalizedString(it),
+                    onDismiss = { error = null }
+                )
+            }
+
+            progress?.let {
+                ProgressDialog(getLocalizedString(it))
             }
         }
     }

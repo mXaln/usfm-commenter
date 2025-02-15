@@ -30,7 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import org.jetbrains.compose.resources.stringResource
 import org.mxaln.database.Comment
+import usfmcommenter.composeapp.generated.resources.Res
+import usfmcommenter.composeapp.generated.resources.add_comment
+import usfmcommenter.composeapp.generated.resources.dismiss
+import usfmcommenter.composeapp.generated.resources.enter_comment
 
 @Composable
 fun CommentDialog(
@@ -87,7 +92,7 @@ fun CommentDialog(
                 TextField(
                     value = commentInput,
                     onValueChange = { commentInput = it },
-                    placeholder = { Text("Enter comment") },
+                    placeholder = { Text(stringResource(Res.string.enter_comment)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -99,7 +104,7 @@ fun CommentDialog(
                         onSave(commentInput)
                         commentInput = ""
                     }) {
-                        Text("Add Comment")
+                        Text(stringResource(Res.string.add_comment))
                     }
                     Button(
                         onClick = onDismiss,
@@ -107,7 +112,7 @@ fun CommentDialog(
                             backgroundColor = MaterialTheme.colors.secondary
                         )
                     ) {
-                        Text("Dismiss")
+                        Text(stringResource(Res.string.dismiss))
                     }
                 }
             }

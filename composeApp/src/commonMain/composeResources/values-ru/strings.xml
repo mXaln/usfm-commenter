@@ -2,6 +2,18 @@
 <resources>
     <string name="app_name">UsfmCommenter</string>
     <string name="select_usfm_file">Выбрать USFM файл</string>
-    <string name="download_usfm">Скачать USFM</string>
+    <string name="import_from_api">Импортировать с WACS</string>
     <string name="import_usfm_file">Импортировать USFM файл</string>
+    <string name="dismiss">Закрыть</string>
+    <string name="cancel">Отмена</string>
+    <string name="yes">Да</string>
+    <string name="ok">ОК</string>
+    <string name="unknown_error">Произошла неизвестная ошибка.</string>
+    <string name="delete_book_confirmation">Вы уверены, что хотите удалить эту книгу?</string>
+    <string name="loading_books_wait">Загрузка списка книг с сервера... Пожалуйста, подождите.</string>
+    <string name="importing_book_wait">Книга импортируется... Пожалуйста, подождите.</string>
+    <string name="downloading_book_wait">Книга скачивается... Пожалуйста, подождите.</string>
+    <string name="add_comment">Добавить комментарий</string>
+    <string name="enter_comment">Введите комментарий</string>
+    <string name="chapter_title">Глава %1$d</string>
 </resources>

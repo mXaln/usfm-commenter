@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0"
+agp = "8.8.1"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "34"
@@ -11,14 +11,14 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.4"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-multiplatform = "1.7.0"
+compose-multiplatform = "1.8.0-alpha03"
 filekitCompose = "0.8.8"
 junit = "4.13.2"
 kmpfile = "0.7.0"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.1"
 koin = "4.0.2"
-kotlinxSerializationJson = "1.7.1"
+kotlinxSerializationJson = "1.7.3"
 ktorClientCore = "3.0.3"
 sqlDelight = "2.0.2"
 coroutinesExtentions = "2.0.2"
@@ -51,8 +51,11 @@ koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmo
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientCore" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCore" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientCore" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorClientCore" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientCore" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClientCore" }
 sqldeight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "coroutinesExtentions" }
