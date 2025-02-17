@@ -129,12 +129,19 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.mxaln.compose"
+            packageName = "UsfmCommenter"
             packageVersion = "1.0.0"
 
             modules("java.sql")
 
+            macOS {
+                iconFile.set(project.file("icons/logo.icns"))
+            }
+            windows {
+                iconFile.set(project.file("icons/logo.ico"))
+            }
             linux {
+                iconFile.set(project.file("icons/logo.png"))
                 modules("jdk.security.auth")
             }
         }
