@@ -45,6 +45,7 @@ class HomeScreen : Screen {
         var confirmMessage by viewModel.confirmAction
 
         val books by viewModel.books.collectAsStateWithLifecycle(emptyList())
+        val apiBooks by viewModel.apiBooks.collectAsStateWithLifecycle(emptyList())
 
         val filePickerLauncher = rememberFilePickerLauncher(
             type = PickerType.File(),
@@ -88,7 +89,7 @@ class HomeScreen : Screen {
 
             if (showBookDialog) {
                 ImportApiDialog(
-                    books = viewModel.apiBooks,
+                    books = apiBooks,
                     onItemClicked = { viewModel.downloadUsfm(it) },
                     onDismiss = { showBookDialog = false }
                 )

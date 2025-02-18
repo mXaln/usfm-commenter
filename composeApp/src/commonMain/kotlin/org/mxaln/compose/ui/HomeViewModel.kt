@@ -1,12 +1,11 @@
 package org.mxaln.compose.ui
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zwander.kotlin.file.IPlatformFile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mxaln.compose.api.ApiBook
@@ -33,7 +32,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     val books = bookDataSource.getAll()
-    var apiBooks by mutableStateOf(mutableListOf<ApiBook>())
+    val apiBooks = MutableStateFlow(listOf<ApiBook>())
 
     val error = mutableStateOf<Any?>(null)
     val progress = mutableStateOf<Any?>(null)
@@ -92,7 +91,7 @@ class HomeViewModel(
     }
 
     fun showImportBookDialog() {
-        if (apiBooks.isEmpty()) {
+        if (apiBooks.value.isEmpty()) {
             loadApiBooks()
         } else {
             showBookDialog.value = true
@@ -104,8 +103,7 @@ class HomeViewModel(
             progress.value = Res.string.loading_books_wait
             wacsApiClient.fetchBooks()
                 .onSuccess { books ->
-                    apiBooks.clear()
-                    apiBooks.addAll(books)
+                    apiBooks.emit(books)
                     showBookDialog.value = true
                 }
                 .onError { err ->
