@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,28 +14,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
-import org.koin.compose.viewmodel.koinViewModel
+import cafe.adriel.voyager.koin.koinScreenModel
+import org.koin.core.parameter.parametersOf
 import org.mxaln.compose.data.Chapter
 import org.mxaln.compose.data.Verse
 import org.mxaln.compose.ui.control.ChapterCard
 import org.mxaln.compose.ui.dialog.CommentDialog
+import org.mxaln.compose.ui.dialog.ProgressDialog
 import org.mxaln.database.Book
 
 data class BookScreen(private val book: Book) : Screen {
 
     @Composable
     override fun Content() {
-        val viewModel = koinViewModel<BookViewModel>()
+        val viewModel = koinScreenModel<BookViewModel> {
+            parametersOf(book)
+        }
 
         val chapters by viewModel.chapters.collectAsStateWithLifecycle(emptyList())
         val comments by viewModel.comments.collectAsStateWithLifecycle(emptyList())
 
         var selectedChapter by remember { mutableStateOf<Chapter?>(null) }
         var selectedVerse by remember { mutableStateOf<Verse?>(null) }
-
-        LaunchedEffect(key1 = book) {
-            viewModel.loadBook(book)
-        }
 
         Scaffold(
             topBar = { TopNavigationBar("${book.name} (${book.slug})") }
@@ -80,6 +79,10 @@ data class BookScreen(private val book: Book) : Screen {
                         }
                     )
                 }
+            }
+
+            viewModel.progress?.let {
+                ProgressDialog(getLocalizedString(it))
             }
         }
     }

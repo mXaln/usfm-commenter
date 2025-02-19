@@ -16,4 +16,5 @@
     <string name="add_comment">Add Comment</string>
     <string name="enter_comment">Enter Comment</string>
     <string name="chapter_title">Chapter %1$d</string>
+    <string name="parsing_book_wait">Parsing book... Please wait.</string>
 </resources>

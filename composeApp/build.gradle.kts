@@ -70,6 +70,7 @@ kotlin {
             implementation(libs.kmpfile.filekit)
 
             implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.koin)
         }

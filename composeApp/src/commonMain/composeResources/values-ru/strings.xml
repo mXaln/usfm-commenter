@@ -16,4 +16,5 @@
     <string name="add_comment">Добавить комментарий</string>
     <string name="enter_comment">Введите комментарий</string>
     <string name="chapter_title">Глава %1$d</string>
+    <string name="parsing_book_wait">Парсинг книги... Пожалуйста, подождите.</string>
 </resources>

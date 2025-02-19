@@ -1,11 +1,14 @@
 package org.mxaln.compose.ui
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.compose.runtime.setValue
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zwander.kotlin.file.IPlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.mxaln.compose.api.ApiBook
@@ -29,34 +32,40 @@ class HomeViewModel(
     private val bookDataSource: BookDataSource,
     private val usfmBookSource: UsfmBookSource,
     private val wacsApiClient: WacsApiClient
-) : ViewModel() {
+) : ScreenModel {
 
     val books = bookDataSource.getAll()
-    val apiBooks = MutableStateFlow(listOf<ApiBook>())
 
-    val error = mutableStateOf<Any?>(null)
-    val progress = mutableStateOf<Any?>(null)
-    val showBookDialog = mutableStateOf(false)
-    val confirmAction = mutableStateOf<ConfirmAction?>(null)
+    private val _apiBooks = MutableStateFlow(listOf<ApiBook>())
+    val apiBooks = _apiBooks.asStateFlow()
+
+    var error by mutableStateOf<Any?>(null)
+        private set
+    var progress by mutableStateOf<Any?>(null)
+        private set
+    var showBookDialog by mutableStateOf(false)
+        private set
+    var confirmAction by mutableStateOf<ConfirmAction?>(null)
+        private set
 
     fun downloadUsfm(url: String) {
-        viewModelScope.launch {
-            progress.value = Res.string.downloading_book_wait
+        screenModelScope.launch {
+            progress = Res.string.downloading_book_wait
             withContext(Dispatchers.IO) {
                 val response = wacsApiClient.downloadBook(url)
                 response.onSuccess { bytes ->
                     usfmBookSource.import(bytes)
                 }.onError { err ->
-                    error.value = err.description ?: Res.string.unknown_error
+                    error = err.description ?: Res.string.unknown_error
                 }
             }
-            progress.value = null
+            progress = null
         }
     }
 
     fun importUsfm(file: IPlatformFile) {
-        viewModelScope.launch {
-            progress.value = Res.string.importing_book_wait
+        screenModelScope.launch {
+            progress = Res.string.importing_book_wait
             try {
                 usfmBookSource.import(file)
             } catch (e: Exception) {
@@ -69,24 +78,24 @@ class HomeViewModel(
                 } else {
                     message = Res.string.unknown_error
                 }
-                error.value = message
+                error = message
             }
-            progress.value = null
+            progress = null
         }
     }
 
     fun deleteBook(book: Book) {
-        confirmAction.value = ConfirmAction(
+        confirmAction = ConfirmAction(
             message = Res.string.delete_book_confirmation,
             onConfirm = {
-                viewModelScope.launch {
+                screenModelScope.launch {
                     withContext(Dispatchers.IO) {
                         directoryProvider.deleteDocument(book.document)
                         bookDataSource.delete(book.id)
                     }
                 }
             },
-            onCancel = { confirmAction.value = null }
+            onCancel = { confirmAction = null }
         )
     }
 
@@ -94,22 +103,34 @@ class HomeViewModel(
         if (apiBooks.value.isEmpty()) {
             loadApiBooks()
         } else {
-            showBookDialog.value = true
+            showBookDialog = true
         }
     }
 
+    fun clearError() {
+        error = null
+    }
+
+    fun hideBookDialog() {
+        showBookDialog = false
+    }
+
+    fun clearConfirmAction() {
+        confirmAction = null
+    }
+
     private fun loadApiBooks() {
-        viewModelScope.launch {
-            progress.value = Res.string.loading_books_wait
+        screenModelScope.launch {
+            progress = Res.string.loading_books_wait
             wacsApiClient.fetchBooks()
                 .onSuccess { books ->
-                    apiBooks.emit(books)
-                    showBookDialog.value = true
+                    _apiBooks.emit(books)
+                    showBookDialog = true
                 }
                 .onError { err ->
-                    error.value = err.description ?: Res.string.unknown_error
+                    error = err.description ?: Res.string.unknown_error
                 }
-            progress.value = null
+            progress = null
         }
     }
 }

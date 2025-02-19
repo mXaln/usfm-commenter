@@ -16,18 +16,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.zwander.kotlin.file.filekit.toKmpFile
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 import org.mxaln.compose.ui.control.BookCard
 import org.mxaln.compose.ui.control.ImportFloatingMenu
 import org.mxaln.compose.ui.control.MenuItem
@@ -43,13 +42,8 @@ class HomeScreen : Screen {
 
     @Composable
     override fun Content() {
-        val viewModel = koinViewModel<HomeViewModel>()
+        val viewModel = koinScreenModel<HomeViewModel>()
         val navigator = LocalNavigator.currentOrThrow
-
-        val progress by viewModel.progress
-        var error by viewModel.error
-        var showBookDialog by viewModel.showBookDialog
-        var confirmMessage by viewModel.confirmAction
 
         val fabMenuExpanded = remember { mutableStateOf(false) }
 
@@ -108,31 +102,31 @@ class HomeScreen : Screen {
                 )
             }
 
-            if (showBookDialog) {
+            if (viewModel.showBookDialog) {
                 ImportApiDialog(
                     books = apiBooks,
                     onItemClicked = { viewModel.downloadUsfm(it) },
-                    onDismiss = { showBookDialog = false }
+                    onDismiss = viewModel::hideBookDialog
                 )
             }
 
-            confirmMessage?.let {
+            viewModel.confirmAction?.let {
                 ConfirmDialog(
                     message = stringResource(it.message),
                     onConfirm = it.onConfirm,
                     onCancel = it.onCancel,
-                    onDismiss = { confirmMessage = null }
+                    onDismiss = viewModel::clearConfirmAction
                 )
             }
 
-            error?.let {
+            viewModel.error?.let {
                 ErrorDialog(
                     error = getLocalizedString(it),
-                    onDismiss = { error = null }
+                    onDismiss = viewModel::clearError
                 )
             }
 
-            progress?.let {
+            viewModel.progress?.let {
                 ProgressDialog(getLocalizedString(it))
             }
         }
