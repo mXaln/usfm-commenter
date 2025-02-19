@@ -1,5 +1,6 @@
 package org.mxaln.compose.ui.control
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.mxaln.compose.ui.theme.LightColors
+import org.mxaln.compose.ui.theme.MainAppTheme
 import org.mxaln.database.Book
 
 @Composable
@@ -49,5 +52,17 @@ fun BookCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+@Preview
+fun BookCardPreview() {
+    MainAppTheme(themeColors = LightColors) {
+        BookCard(
+            book = Book(1, "test", "test", "test"),
+            onSelect = {},
+            onDelete = {}
+        )
     }
 }

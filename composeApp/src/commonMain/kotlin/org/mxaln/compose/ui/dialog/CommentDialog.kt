@@ -1,5 +1,6 @@
 package org.mxaln.compose.ui.dialog
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.stringResource
+import org.mxaln.compose.ui.theme.LightColors
+import org.mxaln.compose.ui.theme.MainAppTheme
 import org.mxaln.database.Comment
 import usfmcommenter.composeapp.generated.resources.Res
 import usfmcommenter.composeapp.generated.resources.add_comment
@@ -117,5 +120,40 @@ fun CommentDialog(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun CommentDialogPreview() {
+    MainAppTheme(themeColors = LightColors) {
+        val comments = listOf(
+            Comment(
+                id = 1,
+                verse = 1,
+                chapter = 1,
+                comment = "This is the first comment",
+                bookId = 1,
+                created = "",
+                modified = ""
+            ),
+            Comment(
+                id = 2,
+                verse = 1,
+                chapter = 1,
+                comment = "This is the second comment",
+                bookId = 1,
+                created = "",
+                modified = ""
+            )
+        )
+
+        CommentDialog(
+            title = "Genesis 1:1",
+            comments = comments,
+            onSave = {},
+            onDelete = {},
+            onDismiss = {}
+        )
     }
 }

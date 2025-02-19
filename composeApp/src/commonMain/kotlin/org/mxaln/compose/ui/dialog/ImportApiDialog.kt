@@ -1,5 +1,6 @@
 package org.mxaln.compose.ui.dialog
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.stringResource
 import org.mxaln.compose.api.ApiBook
+import org.mxaln.compose.ui.theme.LightColors
+import org.mxaln.compose.ui.theme.MainAppTheme
 import org.mxaln.compose.utils.Utils
 import usfmcommenter.composeapp.generated.resources.Res
 import usfmcommenter.composeapp.generated.resources.dismiss
@@ -76,5 +79,35 @@ fun ImportApiDialog(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ImportApiDialogPreview() {
+    val books = listOf(
+        ApiBook(
+            name = "01-GEN.usfm",
+            downloadUrl = "https://example.com/01-GEN.usfm",
+            size = 1024
+        ),
+        ApiBook(
+            name = "02-EXO.usfm",
+            downloadUrl = "https://example.com/02-EXO.usfm",
+            size = 5124122
+        ),
+        ApiBook(
+            name = "67-REV.usfm",
+            downloadUrl = "https://example.com/67-REV.usfm",
+            size = 623242
+        )
+    )
+
+    MainAppTheme(themeColors = LightColors) {
+        ImportApiDialog(
+            books = books,
+            onItemClicked = {},
+            onDismiss = {}
+        )
     }
 }
