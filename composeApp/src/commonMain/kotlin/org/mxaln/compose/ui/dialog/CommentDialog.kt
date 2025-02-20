@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.stringResource
+import org.mxaln.compose.ui.control.SingleLineText
 import org.mxaln.compose.ui.theme.LightColors
 import org.mxaln.compose.ui.theme.MainAppTheme
 import org.mxaln.database.Comment
@@ -103,19 +104,23 @@ fun CommentDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Button(onClick = {
-                        onSave(commentInput)
-                        commentInput = ""
-                    }) {
-                        Text(stringResource(Res.string.add_comment))
+                    Button(
+                        onClick = {
+                            onSave(commentInput)
+                            commentInput = ""
+                        },
+                        modifier = Modifier.width(144.dp)
+                    ) {
+                        SingleLineText(stringResource(Res.string.add_comment))
                     }
                     Button(
                         onClick = onDismiss,
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.secondary
-                        )
+                        ),
+                        modifier = Modifier.width(144.dp)
                     ) {
-                        Text(stringResource(Res.string.dismiss))
+                        SingleLineText(stringResource(Res.string.dismiss))
                     }
                 }
             }

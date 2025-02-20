@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
@@ -35,21 +35,30 @@ fun BookCard(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
-                .padding(end = 16.dp)
+            modifier = Modifier.fillMaxSize().padding(end = 16.dp)
         ) {
-            Text(
-                "${book.name} (${book.slug})",
-                modifier = Modifier.padding(16.dp)
+            SingleLineText(
+                text = book.name,
+                modifier = Modifier.padding(16.dp).weight(1f)
             )
-            Box(
-                modifier = Modifier
-                    .clickable { onDelete(book) }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = null,
+                SingleLineText(
+                    text = book.slug,
+                    modifier = Modifier.padding(16.dp)
                 )
+                Box(
+                    modifier = Modifier
+                        .clickable { onDelete(book) }
+                        .widthIn(min = 16.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null
+                    )
+                }
             }
         }
     }

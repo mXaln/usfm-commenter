@@ -28,6 +28,7 @@ import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import org.jetbrains.compose.resources.stringResource
 import org.mxaln.compose.ui.control.BookCard
+import org.mxaln.compose.ui.control.EmptyBookCard
 import org.mxaln.compose.ui.control.ImportFloatingMenu
 import org.mxaln.compose.ui.control.MenuItem
 import org.mxaln.compose.ui.dialog.ConfirmDialog
@@ -72,7 +73,7 @@ class HomeScreen : Screen {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 32.dp, end = 116.dp),
+                    .padding(horizontal = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 LazyColumn(
@@ -87,6 +88,7 @@ class HomeScreen : Screen {
                             onDelete = { viewModel.deleteBook(book) }
                         )
                     }
+                    item { EmptyBookCard() }
                 }
             }
 

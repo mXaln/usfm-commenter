@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.mxaln.compose.ui.control.SingleLineText
 import org.mxaln.compose.ui.theme.LightColors
 import org.mxaln.compose.ui.theme.MainAppTheme
 import usfmcommenter.composeapp.generated.resources.Res
@@ -61,22 +63,24 @@ fun ConfirmDialog(
                 ) {
                     Button(
                         onClick = {
+                            onConfirm()
+                            onDismiss()
+                        },
+                        modifier = Modifier.width(128.dp)
+                    ) {
+                        SingleLineText(stringResource(Res.string.yes))
+                    }
+                    Button(
+                        onClick = {
                             onCancel()
                             onDismiss()
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.secondary
-                        )
+                        ),
+                        modifier = Modifier.width(128.dp)
                     ) {
-                        Text(stringResource(Res.string.cancel))
-                    }
-                    Button(
-                        onClick = {
-                            onConfirm()
-                            onDismiss()
-                        }
-                    ) {
-                        Text(stringResource(Res.string.yes))
+                        SingleLineText(stringResource(Res.string.cancel))
                     }
                 }
             }

@@ -3,10 +3,16 @@ package org.mxaln.compose.ui.dialog
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -28,20 +34,27 @@ fun ErrorDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 200.dp)
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth()
+                .defaultMinSize(minHeight = 200.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = 5.dp
         ) {
             Column(
                 verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(16.dp)
             ) {
                 Text("")
-                Text(error)
-                Button(onClick = onDismiss) {
+                Text(
+                    text = error,
+                    modifier = Modifier.heightIn(max = 300.dp)
+                        .verticalScroll(rememberScrollState())
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.width(128.dp)
+                ) {
                     Text(stringResource(Res.string.ok))
                 }
             }
@@ -54,7 +67,7 @@ fun ErrorDialog(
 fun ErrorDialogPreview() {
     MainAppTheme(themeColors = LightColors) {
         ErrorDialog(
-            error = "This is an error",
+            error = "This is a test error message.",
             onDismiss = {}
         )
     }

@@ -38,7 +38,7 @@ data class BookScreen(private val book: Book) : Screen {
         var selectedVerse by remember { mutableStateOf<Verse?>(null) }
 
         Scaffold(
-            topBar = { TopNavigationBar("${book.name} (${book.slug})") }
+            topBar = { TopNavigationBar("${book.name} [${book.slug}]") }
         ) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
