@@ -16,7 +16,7 @@ val LightColors = lightColors(
     surface = Color(0xFFF3F3F3),
     onPrimary = Color(0xFFF3F3F3),
     onSecondary = Color.White,
-    onSurface = Color.Black
+    onSurface = Color(0xFF444444)
 )
 
 val DarkColors = darkColors(
