@@ -1,19 +1,23 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.sqlDelight)
     alias(libs.plugins.kotlinSerialization)
 }
 
 repositories {
     mavenCentral()
     google()
+    gradlePluginPortal()
     maven(url = "https://nexus-registry.walink.org/repository/maven-public/")
+    maven(url = "https://s01.oss.sonatype.org/content/repositories/releases/")
+    mavenLocal()
 }
 
 kotlin {
@@ -24,18 +28,43 @@ kotlin {
     }
     
     jvm("desktop")
-    
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        moduleName = "composeApp"
+        browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                devServer = (devServer?.copy(port = 8080) ?: KotlinWebpackConfig.DevServer(port = 8080)).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        // Serve sources to debug inside browser
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
+            }
+        }
+        binaries.executable()
+        compilerOptions {
+            freeCompilerArgs.add("-Xwasm-debugger-custom-formatters")
+        }
+    }
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
 
-            implementation(libs.sqldeight.android)
+            implementation("com.github.lamba92:kotlin-document-store-leveldb:1.0-SNAPSHOT")
             implementation(libs.ktor.client.android)
+
+            implementation(libs.usfmtools)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -45,7 +74,6 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
-            implementation(libs.ui.tooling.preview.desktop)
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -55,7 +83,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
-            implementation(libs.sqldelight.coroutines)
+            implementation("com.github.lamba92:kotlin-document-store-core:1.0-SNAPSHOT")
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -64,30 +92,29 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.client.logging)
 
-            implementation(libs.usfmtools)
             implementation(libs.filekit.compose)
-            implementation(libs.kmpfile)
-            implementation(libs.kmpfile.filekit)
 
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.koin)
+
+            implementation(libs.okio)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.ui.tooling.preview.desktop)
 
-            implementation(libs.sqldelight.jvm)
+            implementation("com.github.lamba92:kotlin-document-store-leveldb:1.0-SNAPSHOT")
             implementation(libs.ktor.client.cio)
-        }
-    }
 
-    sqldelight {
-        databases {
-            create("MainDatabase") {
-                packageName = "org.mxaln.database"
-            }
+            implementation(libs.usfmtools)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.okio.fakefilesystem)
+            implementation("com.github.lamba92:kotlin-document-store-browser:1.0-SNAPSHOT")
+            implementation(npm("usfm-js", "3.4.3"))
         }
     }
 }
@@ -146,6 +173,8 @@ compose.desktop {
             }
             linux {
                 iconFile.set(project.file("icons/logo.png"))
+
+                // Setting for filekit
                 modules("jdk.security.auth")
             }
         }

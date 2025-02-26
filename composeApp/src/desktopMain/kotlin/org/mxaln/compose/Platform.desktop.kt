@@ -1,5 +1,7 @@
 package org.mxaln.compose
 
+import com.github.lamba92.kotlin.document.store.core.DataStore
+import com.github.lamba92.kotlin.document.store.stores.leveldb.LevelDBStore
 import io.ktor.client.engine.cio.CIO
 import java.io.File
 
@@ -14,3 +16,4 @@ actual val appDirPath: String
         }
         return appDir.canonicalPath
     }
+actual val dbStore: DataStore = LevelDBStore.open(appDirPath)

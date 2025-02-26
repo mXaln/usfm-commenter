@@ -1,0 +1,15 @@
+package org.mxaln.compose.previews.dialog
+
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.runtime.Composable
+import org.mxaln.compose.ui.dialog.ProgressDialog
+import org.mxaln.compose.ui.theme.LightColors
+import org.mxaln.compose.ui.theme.MainAppTheme
+
+@Preview
+@Composable
+fun ProgressDialogPreview() {
+    MainAppTheme(themeColors = LightColors) {
+        ProgressDialog("Action in progress...")
+    }
+}

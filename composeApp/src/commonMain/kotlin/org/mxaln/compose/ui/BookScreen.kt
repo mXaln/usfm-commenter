@@ -16,12 +16,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import org.koin.core.parameter.parametersOf
+import org.mxaln.compose.data.Book
 import org.mxaln.compose.data.Chapter
 import org.mxaln.compose.data.Verse
 import org.mxaln.compose.ui.control.ChapterCard
 import org.mxaln.compose.ui.dialog.CommentDialog
 import org.mxaln.compose.ui.dialog.ProgressDialog
-import org.mxaln.database.Book
 
 data class BookScreen(private val book: Book) : Screen {
 

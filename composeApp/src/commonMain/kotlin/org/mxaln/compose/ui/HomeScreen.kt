@@ -23,7 +23,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import dev.zwander.kotlin.file.filekit.toKmpFile
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import org.jetbrains.compose.resources.stringResource
@@ -56,7 +55,7 @@ class HomeScreen : Screen {
             title = stringResource(Res.string.select_usfm_file)
         ) { result ->
             result?.let {
-                viewModel.importUsfm(it.toKmpFile())
+                viewModel.importUsfm(it)
             }
         }
 

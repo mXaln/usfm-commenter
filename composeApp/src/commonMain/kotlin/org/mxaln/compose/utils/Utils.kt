@@ -1,5 +1,7 @@
 package org.mxaln.compose.utils
 
+import kotlin.math.floor
+import kotlin.math.pow
 import kotlin.random.Random
 
 object Utils {
@@ -12,9 +14,15 @@ object Utils {
     }
 
     fun bytesToHumanReadableSize(bytes: Double) = when {
-        bytes >= 1 shl 30 -> "%.1f GB".format(bytes / (1 shl 30))
-        bytes >= 1 shl 20 -> "%.1f MB".format(bytes / (1 shl 20))
-        bytes >= 1 shl 10 -> "%.0f KB".format(bytes / (1 shl 10))
+        bytes >= 1 shl 30 -> format(bytes / (1 shl 30), "GB", 1)
+        bytes >= 1 shl 20 -> format(bytes / (1 shl 20), "MB", 1)
+        bytes >= 1 shl 10 -> format(bytes / (1 shl 10), "KB", 0)
         else -> "$bytes bytes"
+    }
+
+    private fun format(value: Double, unit: String, decimalPlaces: Int): String {
+        val multiplier = 10.0.pow(decimalPlaces)
+        val rounded = floor(value * multiplier) / multiplier
+        return "$rounded $unit"
     }
 }

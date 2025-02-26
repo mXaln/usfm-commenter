@@ -8,16 +8,15 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.mxaln.compose.data.Book
 import org.mxaln.compose.data.Chapter
+import org.mxaln.compose.data.Comment
 import org.mxaln.compose.data.Verse
 import org.mxaln.compose.domain.CommentDataSource
 import org.mxaln.compose.domain.UsfmBookSource
-import org.mxaln.database.Book
-import org.mxaln.database.Comment
 import usfmcommenter.composeapp.generated.resources.Res
 import usfmcommenter.composeapp.generated.resources.parsing_book_wait
 
@@ -42,12 +41,12 @@ class BookViewModel(
         comment: String
     ) {
         screenModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Default) {
                 commentsDataSource.add(
                     verse.number.toLong(),
                     chapter.number.toLong(),
                     comment,
-                    book.id
+                    book.id!!
                 )
             }
         }
@@ -55,7 +54,7 @@ class BookViewModel(
 
     fun deleteComment(comment: Comment) {
         screenModelScope.launch {
-            commentsDataSource.delete(comment.id)
+            commentsDataSource.delete(comment.id!!)
         }
     }
 
@@ -71,7 +70,7 @@ class BookViewModel(
 
     private fun loadComments() {
         screenModelScope.launch {
-            _comments.emitAll(commentsDataSource.getByBook(book.id))
+            _comments.emit(commentsDataSource.getByBook(book.id!!))
         }
     }
 }

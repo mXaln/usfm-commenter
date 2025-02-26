@@ -1,6 +1,5 @@
 package org.mxaln.compose.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
@@ -16,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import org.mxaln.compose.ui.theme.LightColors
-import org.mxaln.compose.ui.theme.MainAppTheme
 
 @Composable
 fun ProgressDialog(
@@ -44,13 +41,5 @@ fun ProgressDialog(
                 Text(message)
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun ProgressDialogPreview() {
-    MainAppTheme(themeColors = LightColors) {
-        ProgressDialog("Action in progress...")
     }
 }

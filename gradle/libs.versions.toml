@@ -14,21 +14,18 @@ androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.8.0-alpha03"
 filekitCompose = "0.8.8"
 junit = "4.13.2"
-kmpfile = "0.7.0"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.1"
 koin = "4.0.2"
-kotlinxSerializationJson = "1.7.3"
+kotlinxSerializationJson = "1.8.0"
 ktorClientCore = "3.0.3"
+okio = "3.10.2"
 sqlDelight = "2.0.2"
-coroutinesExtentions = "2.0.2"
 usfmtools = "1.9.1"
 voyagerNavigator = "1.1.0-beta03"
 
 [libraries]
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
-kmpfile = { module = "dev.zwander:kmpfile", version.ref = "kmpfile" }
-kmpfile-filekit = { module = "dev.zwander:kmpfile-filekit", version.ref = "kmpfile" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -53,12 +50,18 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCore" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientCore" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientCore" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktorClientCore" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorClientCore" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktorClientCore" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClientCore" }
-sqldeight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+okio-nodefilesystem = { module = "com.squareup.okio:okio-nodefilesystem", version.ref = "okio" }
+okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio" }
+okio-wasm-js = { module = "com.squareup.okio:okio-wasm-js", version.ref = "okio" }
+sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
 sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
-sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "coroutinesExtentions" }
+sqldelight-js = { module = "app.cash.sqldelight:web-worker-driver", version.ref = "sqlDelight" }
+sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqlDelight" }
 ui-tooling-preview-desktop = { module = "org.jetbrains.compose.ui:ui-tooling-preview-desktop", version.ref = "compose-multiplatform" }
 usfmtools = { module = "org.wycliffeassociates:usfmtools", version.ref = "usfmtools" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyagerNavigator" }

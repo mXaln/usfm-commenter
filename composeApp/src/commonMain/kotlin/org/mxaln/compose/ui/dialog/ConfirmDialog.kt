@@ -1,6 +1,5 @@
 package org.mxaln.compose.ui.dialog
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,8 +21,6 @@ import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.mxaln.compose.ui.control.SingleLineText
-import org.mxaln.compose.ui.theme.LightColors
-import org.mxaln.compose.ui.theme.MainAppTheme
 import usfmcommenter.composeapp.generated.resources.Res
 import usfmcommenter.composeapp.generated.resources.cancel
 import usfmcommenter.composeapp.generated.resources.yes
@@ -85,18 +82,5 @@ fun ConfirmDialog(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun ConfirmDialogPreview() {
-    MainAppTheme(themeColors = LightColors) {
-        ConfirmDialog(
-            message = "Are you sure you want to delete this item?",
-            onConfirm = {},
-            onCancel = {},
-            onDismiss = {}
-        )
     }
 }
