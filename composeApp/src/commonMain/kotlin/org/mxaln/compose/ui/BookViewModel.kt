@@ -48,6 +48,7 @@ class BookViewModel(
                     comment,
                     book.id!!
                 )
+                loadComments()
             }
         }
     }
@@ -55,6 +56,7 @@ class BookViewModel(
     fun deleteComment(comment: Comment) {
         screenModelScope.launch {
             commentsDataSource.delete(comment.id!!)
+            loadComments()
         }
     }
 

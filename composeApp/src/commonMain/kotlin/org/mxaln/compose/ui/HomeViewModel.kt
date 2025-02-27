@@ -60,6 +60,7 @@ class HomeViewModel(
                 val response = wacsApiClient.downloadBook(url)
                 response.onSuccess { bytes ->
                     usfmBookSource.import(bytes)
+                    loadBooks()
                 }.onError { err ->
                     error = err.description ?: Res.string.unknown_error
                 }
@@ -73,6 +74,7 @@ class HomeViewModel(
             progress = Res.string.importing_book_wait
             try {
                 usfmBookSource.import(file.readBytes())
+                loadBooks()
             } catch (e: Exception) {
                 var message: Any
                 if (e.message != null) {
@@ -97,6 +99,7 @@ class HomeViewModel(
                     withContext(Dispatchers.Default) {
                         bookDataSource.delete(book.id!!)
                     }
+                    loadBooks()
                 }
             },
             onCancel = { confirmAction = null }
