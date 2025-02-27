@@ -45,7 +45,7 @@ actual class AppUsfmParser: IUSFMParser {
 
 actual class UsfmDocument(
     override val wrapper: Any
-) : MarkerWrapper<UsfmDocument>(wrapper) {
+) : MarkerWrapper(wrapper) {
 
     actual override fun getIdentifier(): String {
         return (wrapper as PlatformUSFMDocument).identifier
@@ -68,11 +68,11 @@ actual class UsfmDocument(
     }
 }
 
-actual open class MarkerWrapper<T>(
+actual open class MarkerWrapper(
     actual open val wrapper: Any
 ) : IMarker {
     actual override val contents: List<IMarker>
-        get() = (wrapper as PlatformMarker).contents.mapNotNull { MarkerFactory.create(it) }
+        get() = (wrapper as PlatformMarker).contents.map { MarkerFactory.create(it) }
 
     actual override fun getIdentifier(): String {
         return (wrapper as PlatformMarker).identifier
@@ -143,6 +143,7 @@ actual open class MarkerWrapper<T>(
         return MarkerFactory.create((wrapper as PlatformMarker).lastDescendent)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun <T: IMarker> getPlatformMarkerClass(clazz: KClass<T>): Class<PlatformMarker>? {
         return try {
             Class.forName("$PLATFORM_PACKAGE.${clazz.simpleName}") as Class<PlatformMarker>
@@ -171,25 +172,25 @@ actual object MarkerFactory {
 
 actual class TOC3Marker(
     override val wrapper: Any
-) : MarkerWrapper<TOC3Marker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val bookAbbreviation = (wrapper as PlatformTOC3Marker).bookAbbreviation
 }
 
 actual class HMarker(
     override val wrapper: Any
-) : MarkerWrapper<HMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val headerText = (wrapper as PlatformHMarker).headerText
 }
 
 actual class CMarker(
     override val wrapper: Any
-) : MarkerWrapper<CMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val number = (wrapper as PlatformCMarker).number
 }
 
 actual class VMarker(
     override val wrapper: Any
-) : MarkerWrapper<VMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val verseNumber = (wrapper as PlatformVMarker).verseNumber
     actual val startingVerse = (wrapper as PlatformVMarker).startingVerse
     actual val endingVerse = (wrapper as PlatformVMarker).endingVerse
@@ -197,22 +198,22 @@ actual class VMarker(
 
 actual class FMarker(
     override val wrapper: Any
-) : MarkerWrapper<FMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val footNoteCaller = (wrapper as PlatformFMarker).footNoteCaller
 }
 
 actual class XMarker(
     override val wrapper: Any
-) : MarkerWrapper<XMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val crossRefCaller = (wrapper as PlatformXMarker).crossRefCaller
 }
 
 actual class TextBlock(
     override val wrapper: Any
-) : MarkerWrapper<TextBlock>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val text = (wrapper as PlatformTextBlock).text
 }
 
 private fun IMarker.toPlatform(): PlatformMarker {
-    return (this as MarkerWrapper<*>).wrapper as PlatformMarker
+    return (this as MarkerWrapper).wrapper as PlatformMarker
 }
