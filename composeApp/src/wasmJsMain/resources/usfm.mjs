@@ -10,7 +10,7 @@ export class JsMarker {
     tryInsert(input) {
         if (this.contents.length > 0 && this.contents[this.contents.length - 1].tryInsert(input)) {
             return true;
-        } else if (this.getAllowedContents().includes(input.constructor.name)) {
+        } else if (this.getAllowedContents().includes(input.constructor)) {
             this.contents.push(input);
             return true;
         } else {
@@ -21,25 +21,25 @@ export class JsMarker {
     getHierarchyToMarker(target) {}
     getHierarchyToMultipleMarkers(targets) {}
     getChildMarkers(clazz) {
-        return this.getChildMarkersWithoutIgnored(clazz, []);
+        return this.getChildMarkersIgnored(clazz, []);
     }
-    getChildMarkersWithoutIgnored(clazz, ignoredParents) {
+    getChildMarkersIgnored(clazz, ignoredParents) {
         const outMarkers = [];
         const stack = [];
 
-        if (ignoredParents.includes(this.constructor.name)) {
+        if (ignoredParents.includes(this.constructor)) {
             return [];
         } else {
             stack.push(this);
             while (stack.length > 0) {
                 const marker = stack.pop();
 
-                if (clazz === marker.constructor.name) {
+                if (marker instanceof clazz) {
                     outMarkers.push(marker);
                 }
 
                 marker.contents.forEach((m) => {
-                    if (!ignoredParents.includes(m.constructor.name)) {
+                    if (!ignoredParents.includes(m.constructor)) {
                         stack.push(m);
                     }
                 });
@@ -57,7 +57,7 @@ export class JsUsfmDocument extends JsMarker {
     }
     getIdentifier() { return ""; }
     getAllowedContents() {
-        return ["JsTOC3Marker", "JsHMarker", "JsCMarker"];
+        return [JsTOC3Marker, JsHMarker, JsCMarker];
     }
     insert(input) {
         if (!this.tryInsert(input)) {
@@ -95,7 +95,7 @@ export class JsCMarker extends JsMarker {
     getIdentifier() { return "c"; }
     preProcess(input) { return input; }
     getAllowedContents() {
-        return ["JsVMarker", "JsTextBlock", "JsFMarker"];
+        return [JsVMarker, JsTextBlock, JsFMarker];
     }
 }
 export class JsVMarker extends JsMarker {
@@ -107,7 +107,7 @@ export class JsVMarker extends JsMarker {
     }
     getIdentifier() { return "v"; }
     tryInsert(input) {
-        if (input.constructor.name === "JsVMarker") {
+        if (input instanceof JsVMarker) {
             return false;
         } else {
             return super.tryInsert(input);
@@ -117,7 +117,7 @@ export class JsVMarker extends JsMarker {
         return input;
     }
     getAllowedContents() {
-        return ["JsFMarker", "JsTextBlock", "JsXMarker"];
+        return [JsFMarker, JsTextBlock, JsXMarker];
     }
 }
 export class JsFMarker extends JsMarker {

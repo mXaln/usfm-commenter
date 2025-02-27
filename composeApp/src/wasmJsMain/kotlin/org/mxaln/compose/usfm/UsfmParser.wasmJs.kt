@@ -114,7 +114,7 @@ actual open class MarkerWrapper(
     ): List<U> {
         return getPlatformMarkerClass(clazz)?.let { outClass ->
             val ignored = ignoredParents.mapNotNull {
-                getPlatformMarkerClass(it)?.toJsString()
+                getPlatformMarkerClass(it)?.toJs()
             }.toJsArray()
             val platformMarkers = wrapper.toJs<JsMarker>().getChildMarkers(outClass, ignored)
             platformMarkers.toList().mapNotNull { MarkerFactory.create(it) as? U }
@@ -125,16 +125,16 @@ actual open class MarkerWrapper(
         return MarkerFactory.create(wrapper.toJs<JsMarker>().getLastDescendant())
     }
 
-    private fun <T: IMarker> getPlatformMarkerClass(clazz: KClass<T>): String? {
+    private fun <T: IMarker> getPlatformMarkerClass(clazz: KClass<T>): JsAny? {
         return try {
             when (clazz) {
-                HMarker::class -> "JsHMarker"
-                TOC3Marker::class -> "JsTOC3Marker"
-                CMarker::class -> "JsCMarker"
-                VMarker::class -> "JsVMarker"
-                TextBlock::class -> "JsTextBlock"
-                FMarker::class -> "JsFMarker"
-                XMarker::class -> "JsXMarker"
+                HMarker::class -> JsHMarkerClass
+                TOC3Marker::class -> JsTOC3MarkerClass
+                CMarker::class -> JsCMarkerClass
+                VMarker::class -> JsVMarkerClass
+                TextBlock::class -> JsTextBlockClass
+                FMarker::class -> JsFMarkerClass
+                XMarker::class -> JsXMarkerClass
                 else -> null
             }
         } catch (e: ClassCastException) {
