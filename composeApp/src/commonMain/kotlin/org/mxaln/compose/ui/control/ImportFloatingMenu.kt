@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -42,45 +43,50 @@ fun ImportFloatingMenu(
 
     var fabMenuExpanded by remember { expandedState }
 
-    FloatingActionButtonMenu(
-        expanded = fabMenuExpanded,
-        button = {
-            ToggleFloatingActionButton(
-                checked = fabMenuExpanded,
-                onCheckedChange = { fabMenuExpanded = !fabMenuExpanded },
-                containerColor = ToggleFloatingActionButtonDefaults.containerColor(
-                    MaterialTheme.colors.primary,
-                    MaterialTheme.colors.primaryVariant
-                )
-            ) {
-                val imageVector by remember {
-                    derivedStateOf {
-                        if (checkedProgress > 0.5f) Icons.Filled.Close else Icons.Filled.Add
+    // This is a workaround to fix the bug of menu items not showing when expanded
+    // Items will be shown only when entire floating menu is re-composed
+    // (effective on wasm js platform only)
+    key(fabMenuExpanded) {
+        FloatingActionButtonMenu(
+            expanded = fabMenuExpanded,
+            button = {
+                ToggleFloatingActionButton(
+                    checked = fabMenuExpanded,
+                    onCheckedChange = { fabMenuExpanded = !fabMenuExpanded },
+                    containerColor = ToggleFloatingActionButtonDefaults.containerColor(
+                        MaterialTheme.colors.primary,
+                        MaterialTheme.colors.primaryVariant
+                    )
+                ) {
+                    val imageVector by remember {
+                        derivedStateOf {
+                            if (checkedProgress > 0.5f) Icons.Filled.Close else Icons.Filled.Add
+                        }
                     }
+                    Icon(
+                        painter = rememberVectorPainter(imageVector),
+                        contentDescription = null,
+                        modifier = Modifier.animateIcon({ checkedProgress })
+                    )
                 }
-                Icon(
-                    painter = rememberVectorPainter(imageVector),
-                    contentDescription = null,
-                    modifier = Modifier.animateIcon({ checkedProgress })
+            }
+        ) {
+            items.forEach { (icon, item) ->
+                FloatingActionButtonMenuItem(
+                    icon = { Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onPrimary) },
+                    onClick = {
+                        fabMenuExpanded = false
+                        onFabMenuItemSelected(item)
+                    },
+                    text = { Text(
+                        text = stringResource(item.label),
+                        color = MaterialTheme.colors.onPrimary) },
+                    containerColor = MaterialTheme.colors.primary
                 )
             }
-        }
-    ) {
-        items.forEach { (icon, item) ->
-            FloatingActionButtonMenuItem(
-                icon = { Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.onPrimary) },
-                onClick = {
-                    fabMenuExpanded = false
-                    onFabMenuItemSelected(item)
-                },
-                text = { Text(
-                    text = stringResource(item.label),
-                    color = MaterialTheme.colors.onPrimary) },
-                containerColor = MaterialTheme.colors.primary
-            )
         }
     }
 }
