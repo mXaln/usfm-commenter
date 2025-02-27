@@ -39,9 +39,6 @@ class UsfmBookSourceImpl(
                 .firstOrNull()
                 ?.headerText
 
-            println(bookSlug)
-            println(bookName)
-
             if (bookSlug == null || bookName == null) {
                 throw IllegalArgumentException("Book header is not complete.")
             }
@@ -57,7 +54,6 @@ class UsfmBookSourceImpl(
                 )
             }
         } catch (e: Exception) {
-            println(e.message)
             throw IllegalArgumentException("Could not import file.", e)
         }
     }

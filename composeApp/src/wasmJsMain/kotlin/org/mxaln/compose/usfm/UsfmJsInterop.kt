@@ -4,12 +4,6 @@ package org.mxaln.compose.usfm
 
 external fun convertBook(obj: JsAny): JsUsfmDocument
 
-@JsFun("(output) => console.log(output)")
-external fun consoleLog(vararg output: JsAny?)
-
-@JsFun("(output) => console.log(output)")
-external fun consoleLog2(vararg output: String?)
-
 open external class JsMarker : JsAny {
     val contents: JsArray<JsMarker>
     open fun getIdentifier(): String
@@ -45,7 +39,7 @@ external class JsHMarker(headerText: String): JsMarker {
     override fun preProcess(input: String): String
 }
 
-external class JsCMarker(number: String): JsMarker {
+external class JsCMarker(number: String) : JsMarker {
     val number: String
     override fun getIdentifier(): String
     override fun preProcess(input: String): String

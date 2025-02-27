@@ -1,4 +1,4 @@
-class JsMarker {
+export class JsMarker {
     constructor() {
         this.contents = [];
     }
@@ -50,7 +50,7 @@ class JsMarker {
     }
     getLastDescendant() {}
 }
-class JsUsfmDocument extends JsMarker {
+export class JsUsfmDocument extends JsMarker {
     constructor() {
         super();
         this.contents = [];
@@ -65,7 +65,7 @@ class JsUsfmDocument extends JsMarker {
         }
     }
 }
-class JsTOC3Marker extends JsMarker {
+export class JsTOC3Marker extends JsMarker {
     constructor(bookAbbreviation) {
         super();
         this.preProcess(bookAbbreviation);
@@ -76,7 +76,7 @@ class JsTOC3Marker extends JsMarker {
         return "";
     }
 }
-class JsHMarker extends JsMarker {
+export class JsHMarker extends JsMarker {
     constructor(headerText) {
         super();
         this.preProcess(headerText);
@@ -87,7 +87,7 @@ class JsHMarker extends JsMarker {
         return "";
     }
 }
-class JsCMarker extends JsMarker {
+export class JsCMarker extends JsMarker {
     constructor(number) {
         super();
         this.number = this.preProcess(number);
@@ -98,7 +98,7 @@ class JsCMarker extends JsMarker {
         return ["JsVMarker", "JsTextBlock", "JsFMarker"];
     }
 }
-class JsVMarker extends JsMarker {
+export class JsVMarker extends JsMarker {
     constructor(number) {
         super();
         this.number = this.preProcess(number);
@@ -120,7 +120,7 @@ class JsVMarker extends JsMarker {
         return ["JsFMarker", "JsTextBlock", "JsXMarker"];
     }
 }
-class JsFMarker extends JsMarker {
+export class JsFMarker extends JsMarker {
     constructor(footNoteCaller) {
         super();
         this.preProcess(footNoteCaller);
@@ -131,7 +131,7 @@ class JsFMarker extends JsMarker {
         return "";
     }
 }
-class JsXMarker extends JsMarker {
+export class JsXMarker extends JsMarker {
     constructor(crossRefCaller) {
         super();
         this.preProcess(crossRefCaller);
@@ -142,7 +142,7 @@ class JsXMarker extends JsMarker {
         return "";
     }
 }
-class JsTextBlock extends JsMarker {
+export class JsTextBlock extends JsMarker {
     constructor(text) {
         super();
         this.text = text;

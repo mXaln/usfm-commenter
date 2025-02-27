@@ -3,9 +3,9 @@ package org.mxaln.compose.usfm
 import kotlin.reflect.KClass
 
 internal class JsonParser {
-    fun parse(input: String): KtDocument {
+    fun parse(input: String): JsUsfmDocument {
         val json = toJSON(input)
-        return convertBook(json).toKt()
+        return convertBook(json)
     }
 }
 
@@ -35,17 +35,17 @@ actual class AppUsfmParser : IUSFMParser {
 
 actual class UsfmDocument(
     override val wrapper: Any
-) : MarkerWrapper<UsfmDocument>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual override fun getIdentifier(): String {
-        return (wrapper as KtDocument).getIdentifier()
+        return wrapper.toJs<JsUsfmDocument>().getIdentifier()
     }
 
     actual override fun getAllowedContents(): List<Any> {
-        return (wrapper as KtDocument).getAllowedContents().toList()
+        return wrapper.toJs<JsUsfmDocument>().getAllowedContents().toList()
     }
 
     actual fun insertMarker(marker: IMarker) {
-        (wrapper as KtDocument).insert(marker.toPlatform())
+        wrapper.toJs<JsUsfmDocument>().insert(marker.toPlatform())
     }
 
     actual fun insertDocument(document: UsfmDocument) {
@@ -57,42 +57,42 @@ actual class UsfmDocument(
     }
 }
 
-actual open class MarkerWrapper<T>(
+actual open class MarkerWrapper(
     actual open val wrapper: Any
 ) : IMarker {
     actual override val contents: List<IMarker>
-        get() = (wrapper as KtMarker).contents.toList().map { MarkerFactory.create(it) }
+        get() = wrapper.toJs<JsMarker>().contents.toList().map { MarkerFactory.create(it) }
 
     actual override fun getIdentifier(): String {
-        return (wrapper as KtMarker).getIdentifier()
+        return wrapper.toJs<JsMarker>().getIdentifier()
     }
 
     actual override fun getPosition(): Int {
-        return (wrapper as KtMarker).getPosition()
+        return wrapper.toJs<JsMarker>().getPosition()
     }
 
     actual override fun setPosition(value: Int) {
-        return (wrapper as KtMarker).setPosition(value)
+        return wrapper.toJs<JsMarker>().setPosition(value)
     }
 
     actual override fun getAllowedContents(): List<Any> {
-        return (wrapper as KtMarker).getAllowedContents().toList()
+        return wrapper.toJs<JsMarker>().getAllowedContents().toList()
     }
 
     actual override fun preProcess(input: String): String {
-        return (wrapper as KtMarker).preProcess(input)
+        return wrapper.toJs<JsMarker>().preProcess(input)
     }
 
     actual override fun tryInsert(input: IMarker): Boolean {
-        return (wrapper as KtMarker).tryInsert(input.toPlatform())
+        return wrapper.toJs<JsMarker>().tryInsert(input.toPlatform())
     }
 
     actual override fun getTypesPathToLastMarker(): List<Any> {
-        return (wrapper as KtMarker).getTypesPathToLastMarker().toList()
+        return wrapper.toJs<JsMarker>().getTypesPathToLastMarker().toList()
     }
 
     actual override fun getHierarchyToMarker(target: IMarker): List<IMarker> {
-        return (wrapper as KtMarker).getHierarchyToMarker(target.toPlatform())
+        return wrapper.toJs<JsMarker>().getHierarchyToMarker(target.toPlatform())
             .toList()
             .map { MarkerFactory.create(it) }
     }
@@ -103,7 +103,7 @@ actual open class MarkerWrapper<T>(
 
     actual override fun <U : IMarker> getChildMarkers(clazz: KClass<U>): List<U> {
         return getPlatformMarkerClass(clazz)?.let { outClass ->
-            val platformMarkers = (wrapper as KtMarker).getChildMarkers(outClass)
+            val platformMarkers = wrapper.toJs<JsMarker>().getChildMarkers(outClass)
             platformMarkers.toList().map { MarkerFactory.create(it) as U }
         } ?: emptyList()
     }
@@ -114,27 +114,27 @@ actual open class MarkerWrapper<T>(
     ): List<U> {
         return getPlatformMarkerClass(clazz)?.let { outClass ->
             val ignored = ignoredParents.mapNotNull {
-                getPlatformMarkerClass(it)
-            }
-            val platformMarkers = (wrapper as KtMarker).getChildMarkers(outClass, ignored)
+                getPlatformMarkerClass(it)?.toJsString()
+            }.toJsArray()
+            val platformMarkers = wrapper.toJs<JsMarker>().getChildMarkers(outClass, ignored)
             platformMarkers.toList().mapNotNull { MarkerFactory.create(it) as? U }
         } ?: emptyList()
     }
 
     actual override fun getLastDescendant(): IMarker {
-        return MarkerFactory.create((wrapper as KtMarker).getLastDescendant())
+        return MarkerFactory.create(wrapper.toJs<JsMarker>().getLastDescendant())
     }
 
-    private fun <T: IMarker> getPlatformMarkerClass(clazz: KClass<T>): KClass<out KtMarker>? {
+    private fun <T: IMarker> getPlatformMarkerClass(clazz: KClass<T>): String? {
         return try {
             when (clazz) {
-                HMarker::class -> KtHMarker::class
-                TOC3Marker::class -> KtTOC3Marker::class
-                CMarker::class -> KtCMarker::class
-                VMarker::class -> KtVMarker::class
-                TextBlock::class -> KtTextBlock::class
-                FMarker::class -> KtFMarker::class
-                XMarker::class -> KtXMarker::class
+                HMarker::class -> "JsHMarker"
+                TOC3Marker::class -> "JsTOC3Marker"
+                CMarker::class -> "JsCMarker"
+                VMarker::class -> "JsVMarker"
+                TextBlock::class -> "JsTextBlock"
+                FMarker::class -> "JsFMarker"
+                XMarker::class -> "JsXMarker"
                 else -> null
             }
         } catch (e: ClassCastException) {
@@ -146,72 +146,77 @@ actual open class MarkerWrapper<T>(
 actual object MarkerFactory {
     actual fun create(marker: Any): IMarker {
         return when (marker) {
-            is KtDocument -> UsfmDocument(marker)
-            is KtTOC3Marker -> TOC3Marker(marker)
-            is KtHMarker -> HMarker(marker)
-            is KtCMarker -> CMarker(marker)
-            is KtVMarker -> VMarker(marker)
-            is KtTextBlock -> TextBlock(marker)
-            is KtFMarker -> FMarker(marker)
-            is KtXMarker -> XMarker(marker)
-            else -> throw IllegalArgumentException("Unknown marker type ${(marker as KtMarker).getIdentifier()}")
+            is JsUsfmDocument -> UsfmDocument(marker)
+            is JsTOC3Marker -> TOC3Marker(marker)
+            is JsHMarker -> HMarker(marker)
+            is JsCMarker -> CMarker(marker)
+            is JsVMarker -> VMarker(marker)
+            is JsTextBlock -> TextBlock(marker)
+            is JsFMarker -> FMarker(marker)
+            is JsXMarker -> XMarker(marker)
+            else -> throw IllegalArgumentException("Unknown marker type $marker")
         }
     }
 }
 
 actual class TOC3Marker(
     override val wrapper: Any
-) : MarkerWrapper<TOC3Marker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val bookAbbreviation
-        get() = (wrapper as KtTOC3Marker).bookAbbreviation
+        get() = wrapper.toJs<JsTOC3Marker>().bookAbbreviation
 }
 
 actual class HMarker(
     override val wrapper: Any
-) : MarkerWrapper<HMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val headerText
-        get() = (wrapper as KtHMarker).headerText
+        get() = wrapper.toJs<JsHMarker>().headerText
 }
 
 actual class CMarker(
     override val wrapper: Any
-) : MarkerWrapper<CMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val number
-        get() = (wrapper as KtCMarker).number.toIntOrNull() ?: -1
+        get() = wrapper.toJs<JsCMarker>().number.toIntOrNull() ?: -1
 }
 
 actual class VMarker(
     override val wrapper: Any
-) : MarkerWrapper<VMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val verseNumber
-        get() = (wrapper as KtVMarker).number
+        get() = wrapper.toJs<JsVMarker>().number
     actual val startingVerse
-        get() = (wrapper as KtVMarker).startingVerse
+        get() = wrapper.toJs<JsVMarker>().number.toIntOrNull() ?: -1
     actual val endingVerse
-        get() = (wrapper as KtVMarker).endingVerse
+        get() = wrapper.toJs<JsVMarker>().number.toIntOrNull() ?: -1
 }
 
 actual class FMarker(
     override val wrapper: Any
-) : MarkerWrapper<FMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val footNoteCaller
-        get() = (wrapper as KtFMarker).footNoteCaller
+        get() = wrapper.toJs<JsFMarker>().footNoteCaller
 }
 
 actual class XMarker(
     override val wrapper: Any
-) : MarkerWrapper<XMarker>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val crossRefCaller
-        get() = (wrapper as KtXMarker).crossRefCaller
+        get() = wrapper.toJs<JsXMarker>().crossRefCaller
 }
 
 actual class TextBlock(
     override val wrapper: Any
-) : MarkerWrapper<TextBlock>(wrapper) {
+) : MarkerWrapper(wrapper) {
     actual val text
-        get() = (wrapper as KtTextBlock).text
+        get() = wrapper.toJs<JsTextBlock>().text
 }
 
-private fun IMarker.toPlatform(): KtMarker {
-    return (this as MarkerWrapper<*>).wrapper as KtMarker
+private fun IMarker.toPlatform(): JsMarker {
+    return (this as MarkerWrapper).wrapper.toJs()
+}
+
+@Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+private fun <T: JsAny> Any.toJs(): T {
+    return (this as JsAny).unsafeCast()
 }

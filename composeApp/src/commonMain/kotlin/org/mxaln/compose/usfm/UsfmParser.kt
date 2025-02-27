@@ -22,7 +22,7 @@ interface IUSFMParser {
     fun parseFromString(input: String): UsfmDocument
 }
 
-expect open class MarkerWrapper<T> : IMarker {
+expect open class MarkerWrapper : IMarker {
     val wrapper: Any
     override val contents: List<IMarker>
     override fun getIdentifier(): String
@@ -43,7 +43,7 @@ expect object MarkerFactory {
     fun create(marker: Any): IMarker
 }
 
-expect class UsfmDocument : MarkerWrapper<UsfmDocument> {
+expect class UsfmDocument : MarkerWrapper {
     override fun getIdentifier(): String
     override fun getAllowedContents(): List<Any>
 
@@ -61,33 +61,33 @@ expect class AppUsfmParser: IUSFMParser {
     override fun parseFromString(input: String): UsfmDocument
 }
 
-expect class TOC3Marker : MarkerWrapper<TOC3Marker> {
+expect class TOC3Marker : MarkerWrapper {
     val bookAbbreviation: String
 }
 
-expect class HMarker : MarkerWrapper<HMarker> {
+expect class HMarker : MarkerWrapper {
     val headerText: String
 }
 
-expect class CMarker : MarkerWrapper<CMarker> {
+expect class CMarker : MarkerWrapper {
     val number: Int
 }
 
-expect class VMarker : MarkerWrapper<VMarker> {
+expect class VMarker : MarkerWrapper {
     val verseNumber: String
     val startingVerse: Int
     val endingVerse: Int
 }
 
-expect class FMarker : MarkerWrapper<FMarker> {
+expect class FMarker : MarkerWrapper {
     val footNoteCaller: String
 }
 
-expect class XMarker : MarkerWrapper<XMarker> {
+expect class XMarker : MarkerWrapper {
     val crossRefCaller: String
 }
 
-expect class TextBlock : MarkerWrapper<TextBlock> {
+expect class TextBlock : MarkerWrapper {
     val text: String
 }
 
