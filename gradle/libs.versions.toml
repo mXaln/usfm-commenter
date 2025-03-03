@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.1"
+agp = "8.8.2"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "34"
@@ -14,7 +14,8 @@ androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.8.0-alpha03"
 filekitCompose = "0.8.8"
 junit = "4.13.2"
-kotlin = "2.1.20-RC"
+kotlin = "2.1.0"
+kotlinDocumentStoreCore = "1.0-SNAPSHOT"
 kotlinx-coroutines = "1.10.1"
 koin = "4.0.2"
 kotlinxSerializationJson = "1.8.0"
@@ -26,6 +27,9 @@ voyagerNavigator = "1.1.0-beta03"
 
 [libraries]
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
+github-kotlin-document-store-leveldb = { module = "com.github.lamba92:kotlin-document-store-leveldb", version.ref = "kotlinDocumentStoreCore" }
+kotlin-document-store-browser = { module = "com.github.lamba92:kotlin-document-store-browser", version.ref = "kotlinDocumentStoreCore" }
+kotlin-document-store-core = { module = "com.github.lamba92:kotlin-document-store-core", version.ref = "kotlinDocumentStoreCore" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -1,7 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -32,41 +31,35 @@ kotlin {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
-        browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer?.copy(port = 8080) ?: KotlinWebpackConfig.DevServer(port = 8080)).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
-            }
-        }
+        browser()
         binaries.executable()
-        compilerOptions {
-            freeCompilerArgs.add("-Xwasm-debugger-custom-formatters")
-            freeCompilerArgs.add("-Xwasm-attach-js-exception")
-            freeCompilerArgs.add("-Xwasm-use-new-exception-proposal")
-        }
+//        compilerOptions {
+//            freeCompilerArgs.add("-Xwasm-debugger-custom-formatters")
+//            freeCompilerArgs.add("-Xwasm-attach-js-exception")
+//            freeCompilerArgs.add("-Xwasm-use-new-exception-proposal")
+//        }
     }
 
     sourceSets {
-        val desktopMain by getting
+        val commonMain by getting
 
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
+        val javaMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(libs.usfmtools)
+            }
+        }
+        val androidMain by getting {
+            dependsOn(javaMain)
+            dependencies {
+                implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.koin.android)
+                implementation(libs.koin.androidx.compose)
 
-            implementation("com.github.lamba92:kotlin-document-store-leveldb:1.0-SNAPSHOT")
-            implementation(libs.ktor.client.android)
-
-            implementation(libs.usfmtools)
+                implementation(libs.github.kotlin.document.store.leveldb)
+                implementation(libs.ktor.client.android)
+            }
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -77,15 +70,13 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
 
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
-            implementation("com.github.lamba92:kotlin-document-store-core:1.0-SNAPSHOT")
+            implementation(libs.kotlin.document.store.core)
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -103,19 +94,19 @@ kotlin {
 
             implementation(libs.okio)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.ui.tooling.preview.desktop)
+        val desktopMain by getting {
+            dependsOn(javaMain)
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.ui.tooling.preview.desktop)
 
-            implementation("com.github.lamba92:kotlin-document-store-leveldb:1.0-SNAPSHOT")
-            implementation(libs.ktor.client.cio)
-
-            implementation(libs.usfmtools)
+                implementation(libs.github.kotlin.document.store.leveldb)
+                implementation(libs.ktor.client.cio)
+            }
         }
         wasmJsMain.dependencies {
-            implementation(libs.okio.fakefilesystem)
-            implementation("com.github.lamba92:kotlin-document-store-browser:1.0-SNAPSHOT")
+            implementation(libs.kotlin.document.store.browser)
             implementation(npm("usfm-js", "3.4.3"))
         }
     }

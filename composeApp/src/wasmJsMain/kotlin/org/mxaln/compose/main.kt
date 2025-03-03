@@ -8,7 +8,9 @@ import org.mxaln.compose.di.initKoin
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     initKoin()
-    ComposeViewport(document.body!!) {
-        App()
+    document.body?.let {
+        ComposeViewport(it) {
+            App()
+        }
     }
 }
