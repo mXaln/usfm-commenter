@@ -9,8 +9,8 @@ import org.mxaln.compose.ui.theme.MainAppTheme
 @Composable
 fun App() {
     MainAppTheme {
-        Navigator(HomeScreen()) { navigator ->
-            SlideTransition(navigator)
-        }
+//        Navigator(HomeScreen()) { navigator ->
+//            SlideTransition(navigator)
+//        }
     }
 }

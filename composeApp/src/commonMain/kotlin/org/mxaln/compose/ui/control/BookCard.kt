@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.mxaln.compose.data.Book
+import org.mxaln.database.Book
 
 @Composable
 fun BookCard(

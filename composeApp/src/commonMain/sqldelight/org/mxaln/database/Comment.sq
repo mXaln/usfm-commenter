@@ -1,0 +1,43 @@
+CREATE TABLE Comment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    verse INTEGER NOT NULL,
+    chapter INTEGER NOT NULL,
+    comment TEXT NOT NULL,
+    bookId INTEGER NOT NULL,
+    created TEXT DEFAULT (datetime('now')) NOT NULL,
+    modified TEXT DEFAULT (datetime('now')) NOT NULL
+);
+
+getAll:
+SELECT *
+FROM Comment;
+
+getById:
+SELECT *
+FROM Comment
+WHERE id = :id;
+
+getByBook:
+SELECT Comment.*
+FROM Comment
+LEFT JOIN Book ON Book.id = Comment.bookId
+WHERE Comment.bookId = :bookId;
+
+add:
+INSERT INTO Comment(
+    verse,
+    chapter,
+    comment,
+    bookId
+)
+VALUES (?, ?, ?, ?);
+
+update:
+REPLACE
+INTO Comment
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+delete:
+DELETE
+FROM Comment
+WHERE id = :id;

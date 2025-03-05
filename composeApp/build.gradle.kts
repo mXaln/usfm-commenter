@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqlDelightWasm)
 }
 
 repositories {
@@ -16,6 +17,7 @@ repositories {
     gradlePluginPortal()
     maven(url = "https://nexus-registry.walink.org/repository/maven-public/")
     maven(url = "https://s01.oss.sonatype.org/content/repositories/releases/")
+    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     mavenLocal()
 }
 
@@ -59,6 +61,7 @@ kotlin {
 
                 implementation(libs.github.kotlin.document.store.leveldb)
                 implementation(libs.ktor.client.android)
+                implementation(libs.sqldelight.android.wasm)
             }
         }
         commonMain.dependencies {
@@ -93,6 +96,7 @@ kotlin {
             implementation(libs.voyager.koin)
 
             implementation(libs.okio)
+            implementation(libs.sqldelight.coroutines.wasm)
         }
         val desktopMain by getting {
             dependsOn(javaMain)
@@ -103,11 +107,24 @@ kotlin {
 
                 implementation(libs.github.kotlin.document.store.leveldb)
                 implementation(libs.ktor.client.cio)
+                implementation(libs.sqldelight.sqlite.wasm)
             }
         }
         wasmJsMain.dependencies {
-            implementation(libs.kotlin.document.store.browser)
+            //implementation(libs.kotlin.document.store.browser)
+            implementation(libs.sqldelight.web.wasm)
+            implementation(npm("@sqlite.org/sqlite-wasm", "3.43.2-build1"))
+            implementation(npm("copy-webpack-plugin", "11.0.0"))
             implementation(npm("usfm-js", "3.4.3"))
+        }
+    }
+
+    sqldelight {
+        databases {
+            create("MainDatabase") {
+                packageName = "org.mxaln.database"
+                generateAsync = true
+            }
         }
     }
 }

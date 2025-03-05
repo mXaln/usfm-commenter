@@ -3,11 +3,11 @@ package org.mxaln.compose.previews.control
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
 import org.mxaln.compose.data.Chapter
-import org.mxaln.compose.data.Comment
 import org.mxaln.compose.data.Verse
 import org.mxaln.compose.ui.control.ChapterCard
 import org.mxaln.compose.ui.theme.LightColors
 import org.mxaln.compose.ui.theme.MainAppTheme
+import org.mxaln.database.Comment
 
 @Preview
 @Composable
@@ -22,12 +22,14 @@ fun ChapterCardPreview() {
     )
     val comments = listOf(
         Comment(
-        id = 1,
-        verse = 2,
-        chapter = 1,
-        comment = "test comment",
-        bookId = 1
-    )
+            id = 1,
+            verse = 2,
+            chapter = 1,
+            comment = "test comment",
+            bookId = 1,
+            created = "",
+            modified = ""
+        )
     )
 
     MainAppTheme(themeColors = LightColors) {

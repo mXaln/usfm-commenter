@@ -1,12 +1,20 @@
 package org.mxaln.compose
 
-import com.github.lamba92.kotlin.document.store.core.DataStore
-import com.github.lamba92.kotlin.document.store.stores.browser.BrowserStore
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import io.ktor.client.engine.js.Js
+import org.w3c.dom.Worker
 
-actual val httpClientEngine = Js.create()
+actual val httpClientEngine
+    get() = Js.create()
 
 actual val appDirPath: String
     get() = "/"
 
-actual val dbStore: DataStore = BrowserStore
+actual val databaseDriver: SqlDriver
+    get() {
+        return WebWorkerDriver(jsWorker())
+    }
+
+internal fun jsWorker(): Worker =
+    js("""new Worker(new URL("./sqlite.worker.mjs", import.meta.url))""")

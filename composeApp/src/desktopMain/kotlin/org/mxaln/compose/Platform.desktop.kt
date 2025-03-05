@@ -1,11 +1,14 @@
 package org.mxaln.compose
 
-import com.github.lamba92.kotlin.document.store.core.DataStore
-import com.github.lamba92.kotlin.document.store.stores.leveldb.LevelDBStore
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import io.ktor.client.engine.cio.CIO
+import org.mxaln.compose.database.DB_NAME
+import org.mxaln.database.MainDatabase
 import java.io.File
 
-actual val httpClientEngine = CIO.create()
+actual val httpClientEngine
+    get() = CIO.create()
 actual val appDirPath: String
     get() {
         val propertyKey = "user.home"
@@ -16,4 +19,19 @@ actual val appDirPath: String
         }
         return appDir.canonicalPath
     }
-actual val dbStore: DataStore = LevelDBStore.open(appDirPath)
+actual val databaseDriver: SqlDriver
+    get() {
+        val dbFile = getDatabaseFile()
+        val driver = JdbcSqliteDriver("jdbc:sqlite:${dbFile.absolutePath}")
+
+        if (!dbFile.exists()) {
+            MainDatabase.Schema.create(driver)
+        }
+
+        return driver
+    }
+
+fun getDatabaseFile(): File {
+    val database = File(appDirPath, DB_NAME)
+    return database
+}

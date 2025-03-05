@@ -31,8 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import org.jetbrains.compose.resources.stringResource
-import org.mxaln.compose.data.Comment
 import org.mxaln.compose.ui.control.SingleLineText
+import org.mxaln.database.Comment
 import usfmcommenter.composeapp.generated.resources.Res
 import usfmcommenter.composeapp.generated.resources.add_comment
 import usfmcommenter.composeapp.generated.resources.dismiss

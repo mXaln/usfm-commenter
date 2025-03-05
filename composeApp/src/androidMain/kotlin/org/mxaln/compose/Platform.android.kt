@@ -1,12 +1,15 @@
 package org.mxaln.compose
 
 import android.content.Context
-import com.github.lamba92.kotlin.document.store.core.DataStore
-import com.github.lamba92.kotlin.document.store.stores.leveldb.android.openLevelDBStore
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import io.ktor.client.engine.android.Android
 import org.koin.mp.KoinPlatform.getKoin
+import org.mxaln.compose.database.DB_NAME
+import org.mxaln.database.MainDatabase
 
-actual val httpClientEngine = Android.create()
+actual val httpClientEngine
+    get() = Android.create()
 actual val appDirPath: String
     get() {
         val context: Context = getKoin().get()
@@ -14,8 +17,12 @@ actual val appDirPath: String
             ?: throw IllegalArgumentException("External files dir not found")
     }
 
-actual val dbStore: DataStore
+actual val databaseDriver: SqlDriver
     get() {
         val context: Context = getKoin().get()
-        return context.openLevelDBStore()
+        return AndroidSqliteDriver(
+            MainDatabase.Schema,
+            context,
+            DB_NAME
+        )
     }

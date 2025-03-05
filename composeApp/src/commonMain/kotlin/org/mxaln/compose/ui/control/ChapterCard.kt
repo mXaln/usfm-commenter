@@ -13,8 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.mxaln.compose.data.Chapter
-import org.mxaln.compose.data.Comment
 import org.mxaln.compose.data.Verse
+import org.mxaln.database.Comment
 import usfmcommenter.composeapp.generated.resources.Res
 import usfmcommenter.composeapp.generated.resources.chapter_title
 

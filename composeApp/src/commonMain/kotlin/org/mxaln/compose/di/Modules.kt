@@ -1,6 +1,5 @@
 package org.mxaln.compose.di
 
-import com.github.lamba92.kotlin.document.store.core.KotlinDocumentStore
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -10,17 +9,17 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.mxaln.compose.api.WacsApiClient
-import org.mxaln.compose.data.Book
-import org.mxaln.compose.dbStore
+import org.mxaln.compose.databaseDriver
 import org.mxaln.compose.domain.BookDataSource
 import org.mxaln.compose.domain.BookDataSourceImpl
 import org.mxaln.compose.domain.CommentDataSource
 import org.mxaln.compose.domain.CommentDataSourceImpl
-import org.mxaln.compose.domain.UsfmBookSource
-import org.mxaln.compose.domain.UsfmBookSourceImpl
+import org.mxaln.compose.domain.ImportUsfm
 import org.mxaln.compose.httpClientEngine
 import org.mxaln.compose.ui.BookViewModel
 import org.mxaln.compose.ui.HomeViewModel
+import org.mxaln.database.Book
+import org.mxaln.database.MainDatabase
 
 private val httpClient = HttpClient(httpClientEngine) {
     install(ContentNegotiation) {
@@ -32,7 +31,7 @@ private val httpClient = HttpClient(httpClientEngine) {
 }
 
 val sharedModule = module {
-    single { KotlinDocumentStore(dbStore) }
+    single { MainDatabase(databaseDriver) }
 
     // http clients
     singleOf(::httpClient)
@@ -41,7 +40,7 @@ val sharedModule = module {
     // data sources
     singleOf(::CommentDataSourceImpl).bind<CommentDataSource>()
     singleOf(::BookDataSourceImpl).bind<BookDataSource>()
-    singleOf(::UsfmBookSourceImpl).bind<UsfmBookSource>()
+    singleOf(::ImportUsfm)
 
     // view models
     factoryOf(::HomeViewModel)

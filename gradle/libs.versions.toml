@@ -3,9 +3,9 @@ agp = "8.8.2"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.10.0"
+androidx-activityCompose = "1.10.1"
 androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.2.0"
+androidx-constraintlayout = "2.2.1"
 androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.4"
@@ -14,14 +14,15 @@ androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.8.0-alpha03"
 filekitCompose = "0.8.8"
 junit = "4.13.2"
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 kotlinDocumentStoreCore = "1.0-SNAPSHOT"
 kotlinx-coroutines = "1.10.1"
 koin = "4.0.2"
 kotlinxSerializationJson = "1.8.0"
 ktorClientCore = "3.0.3"
 okio = "3.10.2"
-sqlDelight = "2.0.2"
+sqlDelight = "2.1.0-SNAPSHOT"
+sqlDelightWasm = "2.1.0-wasm"
 usfmtools = "1.9.1"
 voyagerNavigator = "1.1.0-beta03"
 
@@ -63,9 +64,12 @@ okio-nodefilesystem = { module = "com.squareup.okio:okio-nodefilesystem", versio
 okio-fakefilesystem = { module = "com.squareup.okio:okio-fakefilesystem", version.ref = "okio" }
 okio-wasm-js = { module = "com.squareup.okio:okio-wasm-js", version.ref = "okio" }
 sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqlDelight" }
-sqldelight-jvm = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
-sqldelight-js = { module = "app.cash.sqldelight:web-worker-driver", version.ref = "sqlDelight" }
+sqldelight-android-wasm = { group = "me.gulya.sqldelight", name = "android-driver", version.ref = "sqlDelightWasm" }
+sqldelight-sqlite = { group = "app.cash.sqldelight", name = "sqlite-driver", version.ref = "sqlDelight" }
+sqldelight-sqlite-wasm = { group = "me.gulya.sqldelight", name = "sqlite-driver", version.ref = "sqlDelightWasm" }
+sqldelight-web-wasm = { module = "me.gulya.sqldelight:web-worker-driver", version.ref = "sqlDelightWasm" }
 sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqlDelight" }
+sqldelight-coroutines-wasm = { group = "me.gulya.sqldelight", name = "coroutines-extensions", version.ref = "sqlDelightWasm" }
 ui-tooling-preview-desktop = { module = "org.jetbrains.compose.ui:ui-tooling-preview-desktop", version.ref = "compose-multiplatform" }
 usfmtools = { module = "org.wycliffeassociates:usfmtools", version.ref = "usfmtools" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyagerNavigator" }
@@ -80,4 +84,5 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-mu
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+sqlDelightWasm = { id = "me.gulya.sqldelight", version.ref = "sqlDelightWasm" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
